@@ -44,10 +44,10 @@ public class TilesController : MonoBehaviour
     ReadTilesData();
   }
 
-  void ReadTilesData()
+  async void ReadTilesData()
   {
     string path = Application.dataPath + "/Resources";
-    object data = Json.ReadJson(path, "tiles.json", typeof(TileListDTO));
+    object data = await Json.ReadJson<TileListDTO>(path, "tiles.json");
     if (data == null)
     {
       Debug.LogError("No se pudo leer el archivo JSON.");
