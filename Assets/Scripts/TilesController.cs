@@ -1,10 +1,10 @@
 using UnityEngine;
 using System.IO;
 using System;
-using Unity.VisualScripting;
+using System.Threading.Tasks;
 
 
-public class TilesController : MonoBehaviour
+public class TilesController
 {
   // Instancia estática privada que se inicializa solo cuando se necesita.
   private static TilesController instance = null;
@@ -38,21 +38,16 @@ public class TilesController : MonoBehaviour
   TileDTO[] tiles;
   public static bool done = false;
 
-  // Start is called before the first frame update
-  void Start()
-  {
-    ReadTilesData();
-  }
-
-  async void ReadTilesData()
+  public async Task<bool> ReadTilesData()
   {
     string path = Application.dataPath + "/Resources";
     object data = await Json.ReadJson<TileListDTO>(path, "tiles.json");
+
     if (data == null)
     {
       Debug.LogError("No se pudo leer el archivo JSON.");
       CreateJson();
-      return;
+      return false;
     }
 
     try
@@ -64,19 +59,19 @@ public class TilesController : MonoBehaviour
       {
         Debug.Log($"Tile: {tile.x}, {tile.z}, {tile.blocked}");
       }
-      done = true;
     }
     catch (Exception e)
     {
       Debug.LogError("Error al castear el objeto a TileList: " + e.Message);
     }
 
+    return true;
   }
 
 
   void CreateJson()
   {
-    GameObject tilesContainer = this.gameObject;
+    GameObject tilesContainer = GameObject.Find("Tiles");
     GameObject tileObj;
     int count = tilesContainer.transform.childCount;
     tiles = new TileDTO[count];
