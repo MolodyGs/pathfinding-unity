@@ -3,73 +3,66 @@ using System.IO;
 using System;
 using System.Threading.Tasks;
 
-
-public class TilesController
+public static class TilesController
 {
-  // Instancia estática privada que se inicializa solo cuando se necesita.
-  private static TilesController instance = null;
+  static TileDTO[] tiles;
 
-  // Objeto de bloqueo para asegurar la sincronización en entornos multihilo.
-  private static readonly object lockObject = new object();
-
-  // Constructor privado para evitar instanciaciones externas.
-  private TilesController()
-  {
-    Console.WriteLine("Instancia de Singleton creada.");
-  }
-
-  // Propiedad pública que retorna la instancia única de la clase.
-  public static TilesController Instance
-  {
-    get
-    {
-      // Bloquear el acceso cuando se está creando la instancia en un entorno multihilo.
-      lock (lockObject)
-      {
-        // Si la instancia no ha sido creada, se crea en este momento.
-        if (instance == null)
-        {
-          instance = new TilesController();
-        }
-        return instance;
-      }
-    }
-  }
-  TileDTO[] tiles;
-  public static bool done = false;
-
-  public async Task<bool> ReadTilesData()
+  public static async Task<bool> ReadTilesData()
   {
     string path = Application.dataPath + "/Resources";
     object data = await Json.ReadJson<TileListDTO>(path, "tiles.json");
 
     if (data == null)
     {
-      Debug.LogError("No se pudo leer el archivo JSON.");
-      CreateJson();
-      return false;
+      return await CreateJson();
     }
 
     try
     {
       TileListDTO tileList = (TileListDTO)data;
       tiles = tileList.tiles;
-      Debug.Log("Tiles Count: " + tiles.Length);
-      foreach (TileDTO tile in tiles)
-      {
-        Debug.Log($"Tile: {tile.x}, {tile.z}, {tile.blocked}");
-      }
+      return CreateTiles(tiles);
     }
     catch (Exception e)
     {
       Debug.LogError("Error al castear el objeto a TileList: " + e.Message);
+      return false;
     }
+  }
 
-    return true;
+  static bool CreateTiles(TileDTO[] tiles)
+  {
+
+    Debug.Log("Creando tiles...");
+
+    try
+    {
+      GameObject tilePrefab = Resources.Load<GameObject>("Tile");
+      GameObject tilesContainer = GameObject.Find("Tiles");
+      GameObject tileObj;
+      Tile tileComponent;
+
+      foreach (TileDTO tile in tiles)
+      {
+        tileObj = UnityEngine.Object.Instantiate(tilePrefab);
+        tileObj.transform.position = new Vector3(tile.x, 0, tile.z);
+        tileObj.transform.parent = tilesContainer.transform;
+
+        tileComponent = tileObj.GetComponent<Tile>();
+        tileComponent.ChangeState(tile.blocked);
+      }
+
+      return true;
+    }
+    catch (Exception e)
+    {
+      Debug.LogError("Error al crear los tiles: " + e.Message);
+      return false;
+    }
   }
 
 
-  void CreateJson()
+  static async Task<bool> CreateJson()
   {
     GameObject tilesContainer = GameObject.Find("Tiles");
     GameObject tileObj;
@@ -93,31 +86,11 @@ public class TilesController
       }
     }
 
-    Debug.Log("Tiles Count: " + tiles.Length);
-    foreach (TileDTO tile in tiles)
-    {
-      Debug.Log($"Tile: {tile.x}, {tile.z}, {tile.blocked}");
-    }
-
-    // Serializar la lista de tiles en un objeto contenedor TileList
     TileListDTO tileList = new()
     {
       tiles = tiles
     };
 
-    string json = JsonUtility.ToJson(tileList, true);
-    string path = Path.Combine(Application.dataPath, "Resources", "tiles.json");
-
-    // Asegurarse de que el directorio existe
-    string directory = Path.GetDirectoryName(path);
-    if (!Directory.Exists(directory))
-    {
-      Directory.CreateDirectory(directory);
-    }
-
-    // Guardar el archivo JSON
-    File.WriteAllText(path, json);
-
-    Debug.Log($"JSON creado en: {path}");
+    return await Json.CreateJson("Resources", "tiles.json", tileList);
   }
 }
