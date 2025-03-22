@@ -2,20 +2,22 @@
 
 Proyecto hecho en **Unity versión 2021.3.8f1**.
 
-Mediante la utilización de GameObjects se aplica el algoritmo de busqueda A\* (A estrella). Esto por medio de la identificación de los elementos de la escena, diferenciando entre lo que es un camino libre y uno bloqueado. Es posible cambiar la forma del camino mediante un archivo `tiles.json`, donde se define la posición bajo una perspectiva bidimensional (x, z con "y" como altura), además de un parametro `blocked` para definir si ese tile corresponde a una sección bloqueada.
+Mediante la utilización de **GameObjects**, se aplica el algoritmo de búsqueda A* (A estrella). Esto se logra mediante la identificación de los elementos de la escena, diferenciando entre lo que es un camino libre y uno bloqueado. Es posible cambiar la forma del camino mediante un archivo `tiles.json`, en el cual se define la posición bajo una perspectiva bidimensional (x, z con "y" como altura), además de un parámetro `blocked` para definir si ese tile corresponde a una sección bloqueada.
 
-# Cómo Iniciar el Proyecto
+## Requisitos
 
-Solamente es necesario contar con una versión de Unity compatible con la versión `2021.3.8f1`. No es necesario añadir librerías externas.
+Es necesario contar con una versión de Unity compatible con la versión `2021.3.8f1`. No es necesario añadir librerías externas.
 
-# Estructura
+## Estructura del Proyecto
 
-## Inicio con App.cs
+### Estado Inicial - App.cs
 
-En `App.cs` es donde el proyecto comienza a realizar una lectura para el archivo tiles.json, si este archivo no existe, entonces se creará mediante los GameObjects que ya estén en escena y que sean hijos del **GameObject** `Tiles`.
+En `App.cs` es donde, mediante la clase estática `TilesController.cs`, el proyecto comienza a realizar una lectura del archivo `tiles.json`. Si este archivo no existe, se creará según los **GameObjects** que ya estén en la escena y que sean hijos del **GameObject Tiles**, esto a través de la clase estática `Json.cs`.
+
+### Algoritmo de Búsqueda A* - pathfinding.cs
 
 ...
 
-# Galería
+## Galería
 
 ...
