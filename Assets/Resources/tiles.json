@@ -1,0 +1,129 @@
+{
+    "tiles": [
+        {
+            "x": 1.0,
+            "z": 0.0,
+            "blocked": false
+        },
+        {
+            "x": 2.0,
+            "z": 0.0,
+            "blocked": false
+        },
+        {
+            "x": 3.0,
+            "z": 0.0,
+            "blocked": false
+        },
+        {
+            "x": 4.0,
+            "z": 0.0,
+            "blocked": false
+        },
+        {
+            "x": 5.0,
+            "z": 0.0,
+            "blocked": false
+        },
+        {
+            "x": 1.0,
+            "z": 1.0,
+            "blocked": false
+        },
+        {
+            "x": 2.0,
+            "z": 1.0,
+            "blocked": false
+        },
+        {
+            "x": 3.0,
+            "z": 1.0,
+            "blocked": false
+        },
+        {
+            "x": 4.0,
+            "z": 1.0,
+            "blocked": false
+        },
+        {
+            "x": 5.0,
+            "z": 1.0,
+            "blocked": false
+        },
+        {
+            "x": 1.0,
+            "z": 2.0,
+            "blocked": false
+        },
+        {
+            "x": 2.0,
+            "z": 2.0,
+            "blocked": false
+        },
+        {
+            "x": 3.0,
+            "z": 2.0,
+            "blocked": true
+        },
+        {
+            "x": 4.0,
+            "z": 2.0,
+            "blocked": false
+        },
+        {
+            "x": 5.0,
+            "z": 2.0,
+            "blocked": false
+        },
+        {
+            "x": 1.0,
+            "z": 3.0,
+            "blocked": false
+        },
+        {
+            "x": 2.0,
+            "z": 3.0,
+            "blocked": true
+        },
+        {
+            "x": 3.0,
+            "z": 3.0,
+            "blocked": true
+        },
+        {
+            "x": 4.0,
+            "z": 3.0,
+            "blocked": false
+        },
+        {
+            "x": 5.0,
+            "z": 3.0,
+            "blocked": false
+        },
+        {
+            "x": 1.0,
+            "z": 4.0,
+            "blocked": false
+        },
+        {
+            "x": 2.0,
+            "z": 4.0,
+            "blocked": false
+        },
+        {
+            "x": 3.0,
+            "z": 4.0,
+            "blocked": false
+        },
+        {
+            "x": 4.0,
+            "z": 4.0,
+            "blocked": false
+        },
+        {
+            "x": 5.0,
+            "z": 4.0,
+            "blocked": false
+        }
+    ]
+}
