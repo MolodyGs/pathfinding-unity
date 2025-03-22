@@ -52,5 +52,5 @@
         "Temp/": true
     },
     "dotnet.preferCSharpExtension": true,
-    "dotnet.defaultSolution": "New Unity Project.sln"
+    "dotnet.defaultSolution": "pathfinding.sln"
 }
