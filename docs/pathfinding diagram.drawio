@@ -1,0 +1,148 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
+  <diagram name="Página-1" id="7RRJ4fKq4NXh7FeUNLoN">
+    <mxGraphModel dx="345" dy="1137" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3937" pageHeight="4724" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-1" target="BsYQcsCAqMKAQgoYSRe7-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-1" value="Crear lista de nodos" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="280" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-2" target="BsYQcsCAqMKAQgoYSRe7-10" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-2" value="Establecer el nodo inicial" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="360" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-3" target="BsYQcsCAqMKAQgoYSRe7-9" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-3" value="Establecer el nodo destino" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="520" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-8" target="BsYQcsCAqMKAQgoYSRe7-15" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-48" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-8" target="BsYQcsCAqMKAQgoYSRe7-49" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1120" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-8" value="i &amp;lt; nodos_vecinos" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="720" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-9" target="BsYQcsCAqMKAQgoYSRe7-8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-9" value="Establecer nodos vecinos con respecto al último nodo activo en la lista de nodos activos" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="600" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-10" target="BsYQcsCAqMKAQgoYSRe7-3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-10" value="Añadir el nodo inicial a la lista de nodos activos" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="440" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-15" target="BsYQcsCAqMKAQgoYSRe7-22" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-15" value="Evaluar desplazamiento total para el nodo_i hasta el nodo_activo" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="840" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-35" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;fillColor=#d5e8d4;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-17" target="BsYQcsCAqMKAQgoYSRe7-19" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-41" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;fillColor=#f8cecc;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-17" target="BsYQcsCAqMKAQgoYSRe7-40" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-17" value="costeOrigenAux &amp;lt;&amp;nbsp;&lt;span style=&quot;font-size: 10px;&quot;&gt;costeOrigen_i&lt;/span&gt;?" style="rhombus;whiteSpace=wrap;html=1;spacing=5;" parent="1" vertex="1">
+          <mxGeometry x="820" y="1160" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-43" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-19" target="BsYQcsCAqMKAQgoYSRe7-37" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-19" value="Establecer al nodo padre del nodo i = nodo activo" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="1320" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-27" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-22" target="BsYQcsCAqMKAQgoYSRe7-24" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-30" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-22" target="BsYQcsCAqMKAQgoYSRe7-29" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-22" value="Movimiento Diagonal con respecto al nodo_activo?" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="920" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-34" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-24" target="BsYQcsCAqMKAQgoYSRe7-17" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-24" value="costeOrigenAux = costeOrigen_activo&amp;nbsp;+ 14&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="740" y="1080" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-26" value="Un nodo tiene los atributos:&lt;div style=&quot;font-size: 10px;&quot;&gt;* nodoPadre&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;* costeOrigen (costoG)&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;* costeDestino (costoF)&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;* costeTotal = costeOrigen + costeDestino&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#fff2cc;strokeColor=#d6b656;align=left;verticalAlign=top;spacing=5;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="1080" y="280" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-33" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-29" target="BsYQcsCAqMKAQgoYSRe7-17" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-29" value="costeOrigenAux = costeOrigen_activo + 10&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="940" y="1080" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-46" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-37" target="BsYQcsCAqMKAQgoYSRe7-45" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-37" value="costeOrigen_i = costeOrigenAux" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="1440" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="BO9RQYYsWRUkzL3pZXjN-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="BsYQcsCAqMKAQgoYSRe7-38" target="BsYQcsCAqMKAQgoYSRe7-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-38" value="costeTotal_i = costeOrigen_i + CosteDestino" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="1680" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-42" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=1;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-40" target="BsYQcsCAqMKAQgoYSRe7-8" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1160" y="780" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-40" value="i ++" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;" parent="1" vertex="1">
+          <mxGeometry x="1120" y="1200" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-47" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-45" target="BsYQcsCAqMKAQgoYSRe7-38" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-45" value="Establecer costeDestino_i" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="840" y="1560" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-53" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-49" target="BsYQcsCAqMKAQgoYSRe7-52" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-49" value="Establecer nodo activo según el valor de costeTotal (o costeF) de la lista de nodos" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="720" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-54" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;fillColor=#f8cecc;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-52" target="BsYQcsCAqMKAQgoYSRe7-9" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1480" y="640" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-55" style="edgeStyle=none;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;fillColor=#d5e8d4;" parent="1" source="BsYQcsCAqMKAQgoYSRe7-52" target="BsYQcsCAqMKAQgoYSRe7-56" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1280" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-52" value="Posición ultimo nodo activo = position nodo destino" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="1400" y="720" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="BsYQcsCAqMKAQgoYSRe7-56" value="Establecer la lista de nodos &quot;camino&quot; a partir de la obtención recursiva de los padres de estos, iniciando desde el nodo destino hasta el nodo origen." style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="1600" y="715" width="160" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
