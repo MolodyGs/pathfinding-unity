@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.IO;
+using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 
@@ -15,6 +15,19 @@ public static class TilesController
     if (data == null)
     {
       return await CreateJson();
+    }
+
+    if (data != null && GameObject.Find("Tiles").transform.childCount > 0)
+    {
+      GameObject parent = GameObject.Find("Tiles");
+
+      List<GameObject> children = new();
+      foreach (Transform child in parent.transform)
+      {
+        children.Add(child.gameObject);
+      }
+
+      return children.ToArray();
     }
 
     try
@@ -43,7 +56,7 @@ public static class TilesController
       GameObject[] tilesObj = new GameObject[tiles.Length];
       Tile tileComponent;
 
-      for (int i = 0; i < tiles.Length ; i ++)
+      for (int i = 0; i < tiles.Length; i++)
       {
         tileObj = UnityEngine.Object.Instantiate(tilePrefab);
         tilesObj[i] = tileObj;
