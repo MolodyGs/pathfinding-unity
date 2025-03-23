@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
@@ -38,7 +35,7 @@ public class Tile : MonoBehaviour
   {
     Tile tile = GetComponent<Tile>();
     Debug.Log("Haz hecho click en: Tile: " + tile.x + ", " + tile.z + ", " + tile.blocked);
-    Input.setTile(gameObject);
+    InputController.setTile(gameObject);
   }
 
   public void ChangeState(bool state)

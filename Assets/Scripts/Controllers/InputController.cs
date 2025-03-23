@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-public static class Input
+public static class InputController
 {
   public static GameObject origin { get; set; }
   public static GameObject destination { get; set; }
@@ -22,10 +22,10 @@ public static class Input
     {
       destination = tile;
       tile.GetComponent<Renderer>().material.color = Color.blue;
-      Pathfinding.Path();
+      PathfindingController.Path();
       return;
     }
-    Pathfinding.ResetTiles();
+    PathfindingController.ResetTiles();
     origin.GetComponent<Renderer>().material.color = Color.white;
     destination.GetComponent<Renderer>().material.color = Color.white;
     origin = tile;

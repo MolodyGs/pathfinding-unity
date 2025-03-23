@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
-using System.Security.Cryptography.X509Certificates;
 
 public static class TilesController
 {
@@ -16,7 +15,7 @@ public static class TilesController
   public static async Task<GameObject[]> ReadTilesData()
   {
     string path = Application.dataPath + "/Resources";
-    object data = await Json.ReadJson<TileListDTO>(path, "tiles.json");
+    object data = await JsonController.ReadJson<TileListDTO>(path, "tiles.json");
 
     if (data == null)
     {
@@ -114,7 +113,7 @@ public static class TilesController
     {
       tiles = tiles
     };
-    await Json.CreateJson("Resources", "tiles.json", tileList);
+    await JsonController.CreateJson("Resources", "tiles.json", tileList);
     return tilesObj;
   }
 }

@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using UnityEngine;
-public static class Pathfinding
+public static class PathfindingController
 {
   static GameObject[] tiles;
   static readonly GameObject arrowPrefab = Resources.Load<GameObject>("arrow");
 
   public static void SetTiles(GameObject[] tiles)
   {
-    Pathfinding.tiles = tiles;
+    PathfindingController.tiles = tiles;
   }
 
   public static async void Path()
@@ -19,17 +18,17 @@ public static class Pathfinding
 
     activeTiles = new List<GameObject>
     {
-      Input.origin
+      InputController.origin
     };
-    Input.origin.GetComponent<Tile>().active = true;
+    InputController.origin.GetComponent<Tile>().active = true;
 
-    int hCost = CalcHCost(Input.origin.transform.position);
+    int hCost = CalcHCost(InputController.origin.transform.position);
 
-    Input.origin.GetComponent<Tile>().SetGCost(0);
-    Input.origin.GetComponent<Tile>().SetHCost(hCost);
+    InputController.origin.GetComponent<Tile>().SetGCost(0);
+    InputController.origin.GetComponent<Tile>().SetHCost(hCost);
 
     Debug.Log("hCost: " + hCost);
-    Debug.Log("Total" + Input.origin.GetComponent<Tile>().fCost);
+    Debug.Log("Total" + InputController.origin.GetComponent<Tile>().fCost);
 
     GameObject lastTile = await EvaluateTile(activeTiles, 0);
 
@@ -72,7 +71,7 @@ public static class Pathfinding
     if (betterTile != null)
     {
 
-      if (betterTile.transform.position == Input.destination.transform.position)
+      if (betterTile.transform.position == InputController.destination.transform.position)
       {
         Debug.Log("Llegamos al destino");
         return betterTile;
@@ -164,7 +163,7 @@ public static class Pathfinding
 
   static int CalcHCost(Vector3 tile)
   {
-    int hCost = 10 * (int)(Math.Abs(tile.x - Input.destination.transform.position.x) + Math.Abs(tile.z - Input.destination.transform.position.z));
+    int hCost = 10 * (int)(Math.Abs(tile.x - InputController.destination.transform.position.x) + Math.Abs(tile.z - InputController.destination.transform.position.z));
     return hCost;
   }
 

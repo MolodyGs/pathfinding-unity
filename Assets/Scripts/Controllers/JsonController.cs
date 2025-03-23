@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 /// <summary> Lectura y manejo general de archivo JSON.</summary>
-public static class Json
+public static class JsonController
 {
 
   /// <summary> Hace lectura de un archivo JSON y lo deserializa en un objeto.</summary>

@@ -13,7 +13,7 @@ public class App : MonoBehaviour
     {
       Debug.Log(tiles[i].transform.position);
     }
-    Pathfinding.SetTiles(tiles);
+    PathfindingController.SetTiles(tiles);
   }
 }
 
