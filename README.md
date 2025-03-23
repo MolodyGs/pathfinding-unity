@@ -10,6 +10,29 @@ Es necesario contar con una versión de Unity compatible con la versión `2021.3
 
 ## Estructura del Proyecto
 
+La estrucutra del proyecto sigue estos directorios:
+```
+Pathfinding/
+├─ Assets/
+│  ├─ Resources/
+│  │  ├─ tiles.json
+│  ├─ Scenes/
+│  ├─ Scrips/
+│  │  ├─ Components/
+│  │  │  ├─ Tile.cs
+│  │  ├─ Controllers/
+│  │  │  ├─ InputController.cs
+│  │  │  ├─ JsonController.cs
+│  │  │  ├─ PathfindingController.cs
+│  │  │  ├─ TilesController.cs
+│  │  ├─ Serializables/
+│  │  │  ├─ TileDTO.cs
+│  │  │  ├─ TileListDTO.cs
+│  │  ├─ App.cs
+├─ Docs/
+│  ├─ pathfinding diagram.drawio
+```
+
 ### Estado Inicial - App.cs
 
 En `App.cs` es donde, mediante la clase estática `TilesController.cs`, el proyecto comienza a realizar una lectura del archivo `tiles.json`. Si este archivo no existe, se creará según los **GameObjects** que ya estén en la escena y que sean hijos del **GameObject Tiles**, esto a través de la clase estática `Json.cs`.
