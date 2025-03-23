@@ -16,6 +16,8 @@ public class Tile : MonoBehaviour
 
   public bool active;
 
+  public GameObject arrow;
+
   public GameObject parent;
 
   public Tile(float x, float z, bool blocked = false)
@@ -45,7 +47,7 @@ public class Tile : MonoBehaviour
     if (blocked)
     {
       Renderer renderer = GetComponent<Renderer>();
-      renderer.material.color = Color.red;
+      renderer.material.color = new Color(1.0f, 0.1f, 0.1f);
       this.transform.position = new Vector3(transform.position.x, 0.25f, transform.position.z);
       this.transform.localScale = new Vector3(transform.localScale.x, 1.4f, transform.localScale.z);
     }
@@ -70,6 +72,12 @@ public class Tile : MonoBehaviour
     fCost = gCost + hCost;
   }
 
+  public void SetArrow(GameObject arrow)
+  {
+    Destroy(this.arrow);
+    this.arrow = arrow;
+  }
+
   public void Reset()
   {
     gCost = 0;
@@ -77,13 +85,19 @@ public class Tile : MonoBehaviour
     fCost = 0;
     active = false;
     parent = null;
-    GetComponent<Renderer>().material.color = blocked ? Color.red : Color.white;
+    Destroy(arrow);
+    arrow = null;
+    GetComponent<Renderer>().material.color = blocked ? new Color(1.0f, 0.1f, 0.1f) : Color.white;
   }
 
   public void SetPath()
   {
     GetComponent<Renderer>().material.color = Color.blue;
     if (parent == null) return;
+    for (int i = 0; i < 3; i++)
+    {
+      arrow.transform.GetChild(i).GetComponent<Renderer>().material.color = Color.green;
+    }
     parent.GetComponent<Tile>().SetPath();
   }
 }

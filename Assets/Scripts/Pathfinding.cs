@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using UnityEngine;
 public static class Pathfinding
 {
   static GameObject[] tiles;
+  static readonly GameObject arrowPrefab = Resources.Load<GameObject>("arrow");
 
   public static void SetTiles(GameObject[] tiles)
   {
@@ -80,7 +82,7 @@ public static class Pathfinding
       betterTile.GetComponent<Renderer>().material.color = Color.green;
       betterTile.GetComponent<Tile>().active = true;
       Debug.Log(" --- Cargando Siguiente Evaluación: " + betterTile.transform.position);
-      await Wait(300);
+      await Wait(50);
       return await EvaluateTile(activeTiles, lastActiveTile + 1);
     }
     else
@@ -108,6 +110,12 @@ public static class Pathfinding
       neighbor.GetComponent<Tile>().SetGCost(gCost);
       neighbor.GetComponent<Tile>().SetHCost(CalcHCost(neighbor.transform.position));
       neighbor.GetComponent<Tile>().parent = origin;
+      GameObject arrow = UnityEngine.Object.Instantiate(arrowPrefab);
+      float arrowX = (neighbor.transform.position.x + origin.transform.position.x) / 2;
+      float arrowZ = (neighbor.transform.position.z + origin.transform.position.z) / 2;
+      arrow.transform.SetPositionAndRotation(new Vector3(arrowX, 0.1f, arrowZ), Quaternion.LookRotation(neighbor.transform.position - origin.transform.position));
+      arrow.transform.rotation = Quaternion.Euler(0, arrow.transform.rotation.eulerAngles.y - 90, 0);
+      neighbor.GetComponent<Tile>().SetArrow(arrow);
     }
     Debug.Log(" --- Costo para " + neighbor.transform.position + ": gCost: " + neighbor.GetComponent<Tile>().gCost + " hCost: " + neighbor.GetComponent<Tile>().hCost + " fCost: " + neighbor.GetComponent<Tile>().fCost);
   }
