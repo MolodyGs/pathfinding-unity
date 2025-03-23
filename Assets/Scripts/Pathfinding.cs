@@ -31,7 +31,7 @@ public static class Pathfinding
 
     GameObject lastTile = await EvaluateTile(activeTiles, 0);
 
-    lastTile.GetComponent<Tile>().SetPath();
+    if (lastTile != null) { lastTile.GetComponent<Tile>().SetPath(); }
   }
 
   static async Task<GameObject> EvaluateTile(List<GameObject> activeTiles, int lastActiveTile)
@@ -80,12 +80,13 @@ public static class Pathfinding
       betterTile.GetComponent<Renderer>().material.color = Color.green;
       betterTile.GetComponent<Tile>().active = true;
       Debug.Log(" --- Cargando Siguiente Evaluación: " + betterTile.transform.position);
-      await Wait(1000);
+      await Wait(300);
       return await EvaluateTile(activeTiles, lastActiveTile + 1);
     }
     else
     {
       Debug.LogError("No hay camino");
+      NoPath();
       return null;
     }
   }
@@ -97,12 +98,13 @@ public static class Pathfinding
   {
     float distance = Vector3.Distance(neighbor.transform.position, origin.transform.position);
     neighbor.GetComponent<Renderer>().material.color = neighbor.GetComponent<Tile>().active ? Color.green : Color.yellow;
-    int gCost = neighbor.GetComponent<Tile>().gCost + distance > 1 ? 14 : 10;
+    int gCost = distance > 1 ? 14 : 10;
     gCost += origin.GetComponent<Tile>().gCost;
-    Debug.Log("Distance: " + distance + " gCost: " + gCost + " neighbor gCost: " + neighbor.GetComponent<Tile>().gCost);
+    Debug.Log("Distance entre origen:" + origin.transform.position + " y vecino: " + neighbor.transform.position + ": "  + distance + " gCost: " + gCost + " neighbor gCost: " + neighbor.GetComponent<Tile>().gCost);
 
     if (neighbor.GetComponent<Tile>().fCost == 0 || gCost < neighbor.GetComponent<Tile>().gCost)
     {
+      Debug.Log(" -- Costo actualizado para " + neighbor.transform.position + " con el origen: " + origin.transform.position + " gcost: " + gCost);
       neighbor.GetComponent<Tile>().SetGCost(gCost);
       neighbor.GetComponent<Tile>().SetHCost(CalcHCost(neighbor.transform.position));
       neighbor.GetComponent<Tile>().parent = origin;
@@ -166,4 +168,14 @@ public static class Pathfinding
     }
   }
 
+  public static void NoPath()
+  {
+    foreach (GameObject tile in tiles)
+    {
+      if (tile.GetComponent<Tile>().active)
+      {
+        tile.GetComponent<Renderer>().material.color = Color.red;
+      }
+    }
+  }
 }
