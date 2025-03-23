@@ -2,10 +2,16 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
 
 public static class TilesController
 {
   static TileDTO[] tiles;
+
+  public static void RoundPosition(GameObject tile)
+  {
+    tile.transform.position = new Vector3((float)Math.Round(tile.transform.position.x), 0, (float)Math.Round(tile.transform.position.z));
+  }
 
   public static async Task<GameObject[]> ReadTilesData()
   {
@@ -25,8 +31,9 @@ public static class TilesController
       foreach (Transform child in parent.transform)
       {
         children.Add(child.gameObject);
+        RoundPosition(child.gameObject);
       }
-
+        await CreateJson();
       return children.ToArray();
     }
 
