@@ -7,7 +7,7 @@ public static class TilesController
 {
   static TileDTO[] tiles;
 
-  public static async Task<bool> ReadTilesData()
+  public static async Task<GameObject[]> ReadTilesData()
   {
     string path = Application.dataPath + "/Resources";
     object data = await Json.ReadJson<TileListDTO>(path, "tiles.json");
@@ -26,11 +26,11 @@ public static class TilesController
     catch (Exception e)
     {
       Debug.LogError("Error al castear el objeto a TileList: " + e.Message);
-      return false;
+      return null;
     }
   }
 
-  static bool CreateTiles(TileDTO[] tiles)
+  static GameObject[] CreateTiles(TileDTO[] tiles)
   {
 
     Debug.Log("Creando tiles...");
@@ -40,38 +40,42 @@ public static class TilesController
       GameObject tilePrefab = Resources.Load<GameObject>("Tile");
       GameObject tilesContainer = GameObject.Find("Tiles");
       GameObject tileObj;
+      GameObject[] tilesObj = new GameObject[tiles.Length];
       Tile tileComponent;
 
-      foreach (TileDTO tile in tiles)
+      for (int i = 0; i < tiles.Length ; i ++)
       {
         tileObj = UnityEngine.Object.Instantiate(tilePrefab);
-        tileObj.transform.position = new Vector3(tile.x, 0, tile.z);
+        tilesObj[i] = tileObj;
+        tileObj.transform.position = new Vector3(tiles[i].x, 0, tiles[i].z);
         tileObj.transform.parent = tilesContainer.transform;
 
         tileComponent = tileObj.GetComponent<Tile>();
-        tileComponent.ChangeState(tile.blocked);
+        tileComponent.ChangeState(tiles[i].blocked);
       }
 
-      return true;
+      return tilesObj;
     }
     catch (Exception e)
     {
       Debug.LogError("Error al crear los tiles: " + e.Message);
-      return false;
+      return null;
     }
   }
 
 
-  static async Task<bool> CreateJson()
+  static async Task<GameObject[]> CreateJson()
   {
     GameObject tilesContainer = GameObject.Find("Tiles");
     GameObject tileObj;
+    GameObject[] tilesObj = new GameObject[tilesContainer.transform.childCount];
     int count = tilesContainer.transform.childCount;
     tiles = new TileDTO[count];
 
     for (int i = 0; i < count; i++)
     {
       tileObj = tilesContainer.transform.GetChild(i).gameObject;
+      tilesObj[i] = tileObj;
       Tile tile = tileObj.GetComponent<Tile>();
       tiles[i] = new TileDTO
       {
@@ -90,7 +94,7 @@ public static class TilesController
     {
       tiles = tiles
     };
-
-    return await Json.CreateJson("Resources", "tiles.json", tileList);
+    await Json.CreateJson("Resources", "tiles.json", tileList);
+    return tilesObj;
   }
 }
