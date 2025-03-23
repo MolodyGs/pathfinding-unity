@@ -77,7 +77,7 @@ public class Tile : MonoBehaviour
     fCost = 0;
     active = false;
     parent = null;
-    GetComponent<Renderer>().material.color = Color.white;
+    GetComponent<Renderer>().material.color = blocked ? Color.red : Color.white;
   }
 
   public void SetPath()
