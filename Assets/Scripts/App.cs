@@ -5,10 +5,15 @@ using UnityEngine;
 public class App : MonoBehaviour
 {
 
-  async void Start()
+  GameObject[] tiles;
+  public async void Start()
   {
-    bool response = await TilesController.ReadTilesData();
+    tiles = await TilesController.ReadTilesData();
+    for (int i = 0; i < tiles.Length; i++)
+    {
+      Debug.Log(tiles[i].transform.position);
+    }
+    Pathfinding.SetTiles(tiles);
   }
-
 }
 
