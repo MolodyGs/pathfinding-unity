@@ -33,7 +33,6 @@ public static class InputController
 
       // Se ejecuta el pathfinding y el movimiento.
       await PathfindingController.Path();
-      await MoveController.Move();
       return;
     }
 
@@ -44,7 +43,6 @@ public static class InputController
     origin = destination;
     destination = tile;
     await PathfindingController.Path();
-    await MoveController.Move();
     tile.GetComponent<Renderer>().material.color = Global.GREEN;
   }
 }

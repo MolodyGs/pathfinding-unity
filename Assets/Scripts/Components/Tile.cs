@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Asigna el tile seleccionado por el usuario como origen o destino.
@@ -11,7 +12,7 @@ public class Tile : MonoBehaviour
   public int gCost = 0;
   public int hCost = 0;
   public int fCost = 0;
-  public bool active;
+  public bool closed = false;
   public GameObject arrow;
   public GameObject parent;
   static readonly GameObject arrowPrefab = Resources.Load<GameObject>("arrow");
@@ -44,7 +45,7 @@ public class Tile : MonoBehaviour
     if (blocked)
     {
       Renderer renderer = GetComponent<Renderer>();
-      renderer.material.color = Global.RED;
+      renderer.material.color = Global.BLOCKED;
       transform.position = new Vector3(transform.position.x, 0.25f, transform.position.z);
       transform.localScale = new Vector3(transform.localScale.x, 1.4f, transform.localScale.z);
     }
@@ -99,7 +100,7 @@ public class Tile : MonoBehaviour
     gCost = 0;
     hCost = 0;
     fCost = 0;
-    active = false;
+    closed = false;
     parent = null;
 
     // Destrucción de fechas visuales
@@ -107,13 +108,13 @@ public class Tile : MonoBehaviour
     arrow = null;
 
     // Establecer el color por default según el valor de "blocked"
-    GetComponent<Renderer>().material.color = blocked ? Global.RED : Global.WHITE;
+    GetComponent<Renderer>().material.color = blocked ? Global.BLOCKED : Global.WHITE;
   }
 
   /// <summary>
   /// Establece el tile como parte del camino.
   /// </summary>
-  public void SetPath()
+  public async Task SetPath()
   {
     // Añade el tile a la lista del camino más corto
     PathfindingController.path.Add(gameObject);
@@ -131,6 +132,6 @@ public class Tile : MonoBehaviour
     }
 
     // Añade el padre del tile como parte del camino más corto (de forma indirecta, utiliza esta misma función pero en otro tile)
-    parent.GetComponent<Tile>().SetPath();
+    await parent.GetComponent<Tile>().SetPath();
   }
 }
