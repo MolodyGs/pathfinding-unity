@@ -121,14 +121,14 @@ public class Tile : MonoBehaviour
     // De forma decorativa, cambia el color del tile
     GetComponent<Renderer>().material.color = Global.BLUE;
 
+    // Si no tiene padre, entonces estamos en el origen
+    if (parent == null) return;
+
     // De forma decorativa, cambia el color de la flecha
     for (int i = 0; i < 3; i++)
     {
       arrow.transform.GetChild(i).GetComponent<Renderer>().material.color = Global.GREEN;
     }
-
-    // Si no tiene padre, entonces estamos en el origen
-    if (parent == null) return;
 
     // Añade el padre del tile como parte del camino más corto (de forma indirecta, utiliza esta misma función pero en otro tile)
     parent.GetComponent<Tile>().SetPath();
