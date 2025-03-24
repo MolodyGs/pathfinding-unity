@@ -84,6 +84,8 @@ public static class PathfindingController
 
     // De forma recursiva, se evalua el siguiente tile activo.
     Debug.Log(" --- Cargando Siguiente Evaluación: " + betterTile.transform.position);
+
+    await Task.Delay(5);
     return await EvaluateTile(betterTile);
 
   }
@@ -129,9 +131,9 @@ public static class PathfindingController
         gCost += activeTile.GetComponent<Tile>().gCost;
         Debug.Log("Distance entre tile activo:" + activeTile.transform.position + " y vecino: " + neighbor.transform.position + ": " + distance + " gCost: " + gCost + " neighbor gCost: " + neighbor.GetComponent<Tile>().gCost);
 
-        // Si el tile no está activo, entonces nunca se ha evaluado y se establece el costo de G y H.
+        // Si el tile tiene un cost F igual a 0, entonces esta es la primera vez que se evalua el tile.
         // Si el nuevo costo es menor al costo actual del tile vecino, entonces se actualiza el costo de G y H.
-        if (!neighbor.GetComponent<Tile>().active || gCost < neighbor.GetComponent<Tile>().gCost)
+        if (neighbor.GetComponent<Tile>().fCost == 0 || gCost < neighbor.GetComponent<Tile>().gCost)
         {
           Debug.Log(" -- Costo actualizado para " + neighbor.transform.position + " con el origen: " + activeTile.transform.position + " gcost: " + gCost);
           neighbor.GetComponent<Tile>().SetGCost(gCost);
@@ -144,8 +146,6 @@ public static class PathfindingController
         Debug.Log(" --- Costo para " + neighbor.transform.position + ": gCost: " + neighbor.GetComponent<Tile>().gCost + " hCost: " + neighbor.GetComponent<Tile>().hCost + " fCost: " + neighbor.GetComponent<Tile>().fCost);
       }
     }
-
-
   }
 
   /// <summary>
@@ -204,8 +204,9 @@ public static class PathfindingController
   /// </summary>
   static int CalcHCost(Vector3 tile)
   {
-    int hCost = 10 * (int)(Math.Abs(tile.x - InputController.destination.transform.position.x) + Math.Abs(tile.z - InputController.destination.transform.position.z));
-    return hCost;
+    float x = Math.Abs(tile.x - InputController.destination.transform.position.x);
+    float z = Math.Abs(tile.z - InputController.destination.transform.position.z);
+    return 10 * (int)Math.Abs(x - z) + 14 * (int)(x > z ? z : x);
   }
 
   /// <summary>
