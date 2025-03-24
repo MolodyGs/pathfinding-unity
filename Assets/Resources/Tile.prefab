@@ -96,7 +96,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.1, y: 1.1, z: 1.1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5018365511154038554
 MonoBehaviour:
@@ -111,5 +111,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   x: 0
-  y: 0
+  z: 0
   blocked: 0
+  gCost: 0
+  hCost: 0
+  fCost: 0
+  active: 0
+  arrow: {fileID: 0}
+  parent: {fileID: 0}

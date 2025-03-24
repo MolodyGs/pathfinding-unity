@@ -35,7 +35,7 @@ public class Tile : MonoBehaviour
   {
     Tile tile = GetComponent<Tile>();
     Debug.Log("Haz hecho click en: Tile: " + tile.x + ", " + tile.z + ", " + tile.blocked);
-    InputController.setTile(gameObject);
+    InputController.SetTile(gameObject);
   }
 
   public void ChangeState(bool state)
@@ -44,14 +44,14 @@ public class Tile : MonoBehaviour
     if (blocked)
     {
       Renderer renderer = GetComponent<Renderer>();
-      renderer.material.color = new Color(1.0f, 0.1f, 0.1f);
+      renderer.material.color = Global.RED;
       this.transform.position = new Vector3(transform.position.x, 0.25f, transform.position.z);
       this.transform.localScale = new Vector3(transform.localScale.x, 1.4f, transform.localScale.z);
     }
     else
     {
       Renderer renderer = GetComponent<Renderer>();
-      renderer.material.color = Color.white;
+      renderer.material.color = Global.WHITE;
       this.transform.position = new Vector3(transform.position.x, 0.0f, transform.position.z);
       this.transform.localScale = new Vector3(transform.localScale.x, 0.9f, transform.localScale.z);
     }
@@ -84,16 +84,17 @@ public class Tile : MonoBehaviour
     parent = null;
     Destroy(arrow);
     arrow = null;
-    GetComponent<Renderer>().material.color = blocked ? new Color(1.0f, 0.1f, 0.1f) : Color.white;
+    GetComponent<Renderer>().material.color = blocked ? Global.RED : Global.WHITE;
   }
 
   public void SetPath()
   {
-    GetComponent<Renderer>().material.color = Color.blue;
+    PathfindingController.path.Add(this.gameObject);
+    GetComponent<Renderer>().material.color = Global.BLUE;
     if (parent == null) return;
     for (int i = 0; i < 3; i++)
     {
-      arrow.transform.GetChild(i).GetComponent<Renderer>().material.color = Color.green;
+      arrow.transform.GetChild(i).GetComponent<Renderer>().material.color = Global.GREEN;
     }
     parent.GetComponent<Tile>().SetPath();
   }
