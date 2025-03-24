@@ -5,6 +5,7 @@ using UnityEngine;
 public static class PathfindingController
 {
   static GameObject[] tiles;
+  public static List<GameObject> path = new();
   static readonly GameObject arrowPrefab = Resources.Load<GameObject>("arrow");
 
   public static void SetTiles(GameObject[] tiles)
@@ -12,7 +13,7 @@ public static class PathfindingController
     PathfindingController.tiles = tiles;
   }
 
-  public static async void Path()
+  public static async Task Path()
   {
     List<GameObject> activeTiles;
 
@@ -32,7 +33,11 @@ public static class PathfindingController
 
     GameObject lastTile = await EvaluateTile(activeTiles, 0);
 
-    if (lastTile != null) { lastTile.GetComponent<Tile>().SetPath(); }
+    if (lastTile != null)
+    {
+      path.Add(lastTile);
+      lastTile.GetComponent<Tile>().SetPath();
+    }
   }
 
   static async Task<GameObject> EvaluateTile(List<GameObject> activeTiles, int lastActiveTile)
@@ -78,10 +83,9 @@ public static class PathfindingController
       }
 
       activeTiles.Add(betterTile);
-      betterTile.GetComponent<Renderer>().material.color = Color.green;
+      betterTile.GetComponent<Renderer>().material.color = Global.GREEN;
       betterTile.GetComponent<Tile>().active = true;
       Debug.Log(" --- Cargando Siguiente Evaluación: " + betterTile.transform.position);
-      await Wait(50);
       return await EvaluateTile(activeTiles, lastActiveTile + 1);
     }
     else
@@ -98,10 +102,10 @@ public static class PathfindingController
   static void EvaluateCost(GameObject neighbor, GameObject origin)
   {
     float distance = Vector3.Distance(neighbor.transform.position, origin.transform.position);
-    neighbor.GetComponent<Renderer>().material.color = neighbor.GetComponent<Tile>().active ? Color.green : Color.yellow;
+    neighbor.GetComponent<Renderer>().material.color = neighbor.GetComponent<Tile>().active ? Global.GREEN : Global.YELLOW;
     int gCost = distance > 1 ? 14 : 10;
     gCost += origin.GetComponent<Tile>().gCost;
-    Debug.Log("Distance entre origen:" + origin.transform.position + " y vecino: " + neighbor.transform.position + ": "  + distance + " gCost: " + gCost + " neighbor gCost: " + neighbor.GetComponent<Tile>().gCost);
+    Debug.Log("Distance entre origen:" + origin.transform.position + " y vecino: " + neighbor.transform.position + ": " + distance + " gCost: " + gCost + " neighbor gCost: " + neighbor.GetComponent<Tile>().gCost);
 
     if (neighbor.GetComponent<Tile>().fCost == 0 || gCost < neighbor.GetComponent<Tile>().gCost)
     {
@@ -169,6 +173,7 @@ public static class PathfindingController
 
   public static void ResetTiles()
   {
+    path = new();
     foreach (GameObject tile in tiles)
     {
       tile.GetComponent<Tile>().Reset();
@@ -181,7 +186,7 @@ public static class PathfindingController
     {
       if (tile.GetComponent<Tile>().active)
       {
-        tile.GetComponent<Renderer>().material.color = Color.red;
+        tile.GetComponent<Renderer>().material.color = Global.RED;
       }
     }
   }
