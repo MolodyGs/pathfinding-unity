@@ -7,16 +7,16 @@ using UnityEngine;
 /// </summary>
 public class App : MonoBehaviour
 {
-  GameObject[] tiles;
-  public async void Start()
-  {
-    //Obtiene los tiles a partir de la lectura del archivo tiles.json
-    tiles = await TilesController.ReadTilesData();
+  // GameObject[] tiles;
+  // public async void Start()
+  // {
+  //   //Obtiene los tiles a partir de la lectura del archivo tiles.json
+  //   tiles = await TilesController.ReadTilesData();
 
-    // Se asignan los tiles al PathfindingController
-    PathfindingController.SetTiles(tiles);
+  //   // Se asignan los tiles al PathfindingController
+  //   PathfindingController.SetTiles(tiles);
 
-    // Luego de la asignación, se espera la interacción del usuario para iniciar el pathfinding por medio de la clase InputController
-  }
+  //   // Luego de la asignación, se espera la interacción del usuario para iniciar el pathfinding por medio de la clase InputController
+  // }
 }
 
