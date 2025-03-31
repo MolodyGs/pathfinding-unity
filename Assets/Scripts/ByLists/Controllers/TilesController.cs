@@ -13,11 +13,12 @@ namespace Controllers
   public static class TilesController
   {
     // Lista de tiles con acceso indexado (O(1))
-    public static TileNode[,] tiles = new TileNode[100, 100];
+    private static TileNode[,] tiles = new TileNode[100, 100];
     public static List<TileNode> evaluatedTiles = new();
 
     public static void AddTileFromScene()
     {
+      Debug.Log("Cargando Tiles");
       GameObject gameObjectTilesParent = GameObject.Find("TilesForLists");
       for (int i = 0; i < gameObjectTilesParent.transform.childCount; i++)
       {
@@ -27,8 +28,9 @@ namespace Controllers
         {
           tile.GetComponent<Renderer>().material.color = Global.RED;
         }
+        Debug.Log("Tile Cargado!");
       }
-
+      Debug.Log("Tiles creados desde la escena.");
       foreach (TileNode tile in tiles)
       {
         if (tile != null)
@@ -44,6 +46,26 @@ namespace Controllers
       {
         blocked = blocked
       };
+    }
+
+    public static TileNode Find(int x, int z)
+    {
+      try
+      {
+        TileNode tile = tiles[x, z];
+        if (tile == null)
+        {
+          Debug.Log("Tile not found: " + x + " " + z);
+          return null;
+        };
+        Debug.Log("Tile: " + tile.x + " " + tile.z + " blocked: " + tile.blocked);
+        return tile;
+      }
+      catch (System.Exception e)
+      {
+        Debug.Log(e.Message);
+        return null;
+      }
     }
 
     public static void AddTile(TileNode tile)

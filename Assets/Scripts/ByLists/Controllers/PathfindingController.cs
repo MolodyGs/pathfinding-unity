@@ -21,7 +21,7 @@ namespace Controllers
     {
       // Obtiene el tile de origen
       Debug.Log("Cargando origen: " + InputController.origin.transform.position.x + " " + InputController.origin.transform.position.z);
-      TileNode origin = TilesController.tiles[(int)InputController.origin.transform.position.x, (int)InputController.origin.transform.position.z];
+      TileNode origin = TilesController.Find((int)InputController.origin.transform.position.x, (int)InputController.origin.transform.position.z);
       Debug.Log(InputController.origin.transform.position);
       Debug.Log(origin);
       // Calcula el costo de H para el tile de origen.
@@ -86,7 +86,6 @@ namespace Controllers
       // De forma recursiva, se evalua el siguiente tile activo.
       Debug.Log(" --- Cargando Siguiente Evaluación: " + bestTile.GetPosition());
 
-      // await Task.Delay(5);
       return await EvaluateTile(bestTile);
     }
 
@@ -217,7 +216,7 @@ namespace Controllers
       Debug.Log(" -- Buscando vecino: " + x + " " + z);
       try
       {
-        TileNode node = TilesController.tiles[x, z];
+        TileNode node = TilesController.Find(x, z);
 
         if (node == null)
         {
