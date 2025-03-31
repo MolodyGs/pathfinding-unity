@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8715249744547581003}
   m_Layer: 0
   m_Name: TileForLists
-  m_TagString: Untagged
+  m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -110,3 +110,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4939bcb2c8cc169448289fd3c2ba27f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blocked: 0
