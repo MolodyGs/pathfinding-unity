@@ -19,6 +19,7 @@ namespace Controllers
       // Si no hay un origen, se asigna el tile seleccionado como origen.
       if (origin == null)
       {
+        Debug.Log("Estableciendo origen: " + tile.transform.position);
         origin = tile;
         tile.GetComponent<Renderer>().material.color = Global.GREEN;
         return;
@@ -27,6 +28,14 @@ namespace Controllers
       // Si no hay un destino, se asigna el tile seleccionado como destino.
       if (destination == null)
       {
+        Debug.Log("Estableciendo destino: " + tile.transform.position);
+        if (tile.transform.position.x == origin.transform.position.x && tile.transform.position.z == origin.transform.position.z)
+        {
+          // Si el destino es el mismo que el origen, no se puede seleccionar.
+          Debug.Log("El destino no puede ser el mismo que el origen.");
+          return;
+        }
+
         destination = tile;
         tile.GetComponent<Renderer>().material.color = Global.BLUE;
 
@@ -41,16 +50,46 @@ namespace Controllers
       origin.GetComponent<Components.Tile>().Reset();
       destination.GetComponent<Components.Tile>().Reset();
       GameObject[] plates = GameObject.FindGameObjectsWithTag("Plate");
+      Debug.Log("Destruyendo el camino de placas...");
       foreach (GameObject plate in plates)
       {
+        Debug.Log("Placa destruida! ");
         Object.Destroy(plate);
       }
 
+      Debug.Log("Estableciendo origen y destino: " + tile.transform.position);
       origin = destination;
       destination = tile;
       tile.GetComponent<Renderer>().material.color = Global.GREEN;
       origin.GetComponent<Renderer>().material.color = Global.BLUE;
       await PathfindingController.Path();
+    }
+
+    public static async void SetTileWhenMouseEnter(GameObject tile)
+    {
+      if(!tile.CompareTag("Tile")) return;
+      if (origin == null) return;
+      if (tile.GetComponent<Components.Tile>().blocked) return;
+      if (tile.transform.position.x == origin.transform.position.x && tile.transform.position.z == origin.transform.position.z) return;
+
+      if (destination == null)
+      {
+        destination = tile;
+        Debug.Log("Estableciendo destino: " + tile.transform.position);
+      }
+      else
+      {
+        if (destination.transform.position.x == tile.transform.position.x && destination.transform.position.z == tile.transform.position.z) return;
+        destination = tile;
+        GameObject[] plates = GameObject.FindGameObjectsWithTag("Plate");
+        foreach (GameObject plate in plates)
+        {
+          Debug.Log("Placa destruida! ");
+          plate.SetActive(false);
+        }
+        PathfindingController.ResetTiles();
+        await PathfindingController.Path();
+      }
     }
   }
 }

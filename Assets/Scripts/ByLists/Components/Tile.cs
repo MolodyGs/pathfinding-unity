@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Components
@@ -14,6 +15,7 @@ namespace Components
     /// Asigna el tile seleccionado por el usuario como origen o destino.
     /// </summary>
     void OnMouseDown() { Controllers.InputController.SetTile(gameObject); }
+    void OnMouseEnter() { Controllers.InputController.SetTileWhenMouseEnter(gameObject); }
 
     public void Reset()
     {
