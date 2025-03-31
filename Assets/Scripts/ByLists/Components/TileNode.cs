@@ -7,12 +7,12 @@ namespace Components
   {
     public int x;
     public int z;
-    public bool closed = false;
-    public bool blocked = false;
-    public TileNode parent = null;
     public int g = 0;
     public int h = 0;
     public int f = 0;
+    public bool blocked = false;
+    private bool closed = false;
+    public TileNode parent = null;
     static readonly GameObject platePrefab = Resources.Load<GameObject>("Plane");
 
     public TileNode(int x, int z)
@@ -56,6 +56,16 @@ namespace Components
       g = 0;
       h = 0;
       f = 0;
+    }
+
+    public void SetClosed(bool closed)
+    {
+      this.closed = closed;
+    }
+
+    public bool GetClosed()
+    {
+      return closed;
     }
   }
 }

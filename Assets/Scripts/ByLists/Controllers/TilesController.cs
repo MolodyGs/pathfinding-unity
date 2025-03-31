@@ -14,7 +14,7 @@ namespace Controllers
   {
     // Lista de tiles con acceso indexado (O(1))
     private static TileNode[,] tiles = new TileNode[100, 100];
-    public static List<TileNode> evaluatedTiles = new();
+    public static List<TileNode> openTiles = new();
 
     public static void AddTileFromScene()
     {
@@ -50,22 +50,7 @@ namespace Controllers
 
     public static TileNode Find(int x, int z)
     {
-      try
-      {
-        TileNode tile = tiles[x, z];
-        if (tile == null)
-        {
-          Debug.Log("Tile not found: " + x + " " + z);
-          return null;
-        };
-        Debug.Log("Tile: " + tile.x + " " + tile.z + " blocked: " + tile.blocked);
-        return tile;
-      }
-      catch (System.Exception e)
-      {
-        Debug.Log(e.Message);
-        return null;
-      }
+      return tiles[x, z];
     }
 
     public static void AddTile(TileNode tile)
@@ -83,14 +68,34 @@ namespace Controllers
       return tiles[x, z].blocked;
     }
 
-    public static void AddEvaluatedTile(TileNode tile)
+    public static void AddOpenTile(TileNode tile)
     {
-      evaluatedTiles.Add(tile);
+      Debug.Log("Añadiendo tile a la lista de tiles abiertos: " + tile.x + " " + tile.z);
+      openTiles.Add(tile);
+    }
+
+    /// <summary>
+    /// Remueve un tile de la lista de tiles evaluados.
+    /// </summary>
+    public static void RemoveTileEvaluated(TileNode tileToRemove)
+    {
+      Debug.Log("Removiendo tile: " + tileToRemove.x + " " + tileToRemove.z);
+      // Establece el tile como cerrado y lo elimina de la lista de tiles evaluados.
+      foreach (TileNode tile in openTiles)
+      {
+        if (tile.GetPosition() == tileToRemove.GetPosition())
+        {
+          Debug.Log("Tile Encontrado: " + tile.x + " " + tile.z);
+          bool response = openTiles.Remove(tile);
+          Debug.Log("Tile removido?: " + response);
+          return;
+        }
+      }
     }
 
     public static void ResetTiles()
     {
-      evaluatedTiles.Clear();
+      openTiles.Clear();
       foreach (TileNode tile in tiles)
       {
         if (tile == null) continue;

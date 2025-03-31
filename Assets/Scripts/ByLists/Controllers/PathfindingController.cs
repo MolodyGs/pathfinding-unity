@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace Controllers
 {
-
   /// <summary>
   /// Controlador de Pathfinding para encontrar el camino más corto entre dos puntos mediante el algoritmo A* y por medio de tiles.
   /// </summary>
@@ -19,30 +18,28 @@ namespace Controllers
     /// </summary>
     public static async Task Path()
     {
-      // Obtiene el tile de origen
-      Debug.Log("Cargando origen: " + InputController.origin.transform.position.x + " " + InputController.origin.transform.position.z);
+      // Obtiene el tile de origen.
       TileNode origin = TilesController.Find((int)InputController.origin.transform.position.x, (int)InputController.origin.transform.position.z);
-      Debug.Log(InputController.origin.transform.position);
-      Debug.Log(origin);
+
       // Calcula el costo de H para el tile de origen.
       int hCost = CalcHCost(origin);
       origin.SetHCost(hCost);
-      origin.closed = true;
 
-      TilesController.AddEvaluatedTile(origin);
+      // Como el tile de origen es el primer tile, su costo de G es 0 y se añade a la lista de tiles evaluados.
+      origin.SetClosed(true);
 
-      // Obtiene el último tile evaluado. Este corresponde al final o a null si no se encuentra un camino.
+      // Obtiene el último tile evaluado de forma recursiva. El resultado corresponde al tile final o, si no se encuentra un camino, a null.
       TileNode lastTile = await EvaluateTile(origin);
 
-      // Si el último tile evaluado corresponde al destino, entonces se agrega a la lista de tiles del camino más corto.
-      if (lastTile != null)
+      if (lastTile == null)
       {
-        // Se establece el camino más corto en los tiles.
-        await lastTile.SetPath();
-
-        // Comienza el movimiento del personaje.
-        await MoveController.Move();
+        Debug.Log("No se encontró un camino entre el origen y el destino.");
+        NoPath();
+        return;
       }
+
+      // Si el último tile evaluado corresponde al destino, entonces se obtiene el camino más corto.
+      await lastTile.SetPath();
     }
 
     /// <summary>
@@ -65,12 +62,7 @@ namespace Controllers
       TileNode bestTile = FindbestTile();
 
       // Si no se encuentra un mejor camino, entonces hemos evaluado todos los caminos sin encontrar el destino.
-      if (bestTile == null)
-      {
-        Debug.LogError("No hay camino");
-        NoPath();
-        return null;
-      }
+      if (bestTile == null) { return null; }
 
       // Si el mejor tile es el destino, entonces hemos encontrado el camino más corto.
       if (bestTile.x == InputController.destination.transform.position.x && bestTile.z == InputController.destination.transform.position.z)
@@ -79,30 +71,13 @@ namespace Controllers
         return bestTile;
       }
 
-      // Establece el mejor tile como activo y lo agrega a la lista de tiles activos.
-      // bestTile.GetComponent<Renderer>().material.color = Global.GREEN;
-      bestTile.closed = true;
-      RemoveLastTileEvaluated(bestTile);
-      // De forma recursiva, se evalua el siguiente tile activo.
+      // Si aún no hemos llegado al destino, establece el mejor tile como activo y lo agrega a la lista de tiles evaluados.
+      TilesController.RemoveTileEvaluated(bestTile);
+
       Debug.Log(" --- Cargando Siguiente Evaluación: " + bestTile.GetPosition());
 
+      // De forma recursiva, se evalua el siguiente tile.
       return await EvaluateTile(bestTile);
-    }
-
-
-    /// <summary>
-    /// Remueve un tile de la lista de tiles evaluados.
-    /// </summary>
-    static void RemoveLastTileEvaluated(TileNode tileToRemove)
-    {
-      foreach (TileNode tile in TilesController.evaluatedTiles)
-      {
-        if (tile.GetPosition() == tileToRemove.GetPosition())
-        {
-          TilesController.evaluatedTiles.Remove(tile);
-          return;
-        }
-      }
     }
 
     /// <summary>
@@ -114,14 +89,15 @@ namespace Controllers
       int bestTileCost = 9999;
 
       Debug.Log("Buscando mejor tile...");
-      Debug.Log("Cantidad de tiles a evaluar: " + TilesController.evaluatedTiles.Count);
+      Debug.Log("Cantidad de tiles abiertos: " + TilesController.openTiles.Count);
 
       // Itera entre los tiles abiertos y busca el mejor tile para continuar el camino.
-      foreach (TileNode tile in TilesController.evaluatedTiles)
+      foreach (TileNode tile in TilesController.openTiles)
       {
-        Debug.Log("Tile: ("  + tile.x + ", " + tile.z + ") Closed: " + tile.closed + " g: " + tile.g + " h: " + tile.h + " f: " + tile.f);
+        Debug.Log("Tile: (" + tile.x + ", " + tile.z + ") Closed: " + tile.GetClosed() + " g: " + tile.g + " h: " + tile.h + " f: " + tile.f);
+
         // Si el tile ya fue evaluado, entonces omite.
-        if (tile.closed) { continue; }
+        if (tile.GetClosed()) { continue; }
 
         // Obtiene el costo F del tile.
         int fcost = tile.f;
@@ -142,6 +118,7 @@ namespace Controllers
       }
 
       // Retorna el mejor tile encontrado.
+      bestTile.SetClosed(true);
       return bestTile;
     }
 
@@ -179,7 +156,6 @@ namespace Controllers
         }
 
         //Establece el color del tile vecino para indicar que ha sido evaluado.
-        // neighbor.GetComponent<Renderer>().material.color = neighbor.GetComponent<Tile>().closed ? Global.GREEN : Global.YELLOW;
         Debug.Log(" --- Costo para " + neighbor.GetPosition() + ": gCost: " + neighbor.g + " hCost: " + neighbor.h + " fCost: " + neighbor.f);
       }
     }
@@ -193,15 +169,15 @@ namespace Controllers
       int x = tile.x;
       int z = tile.z;
 
-      // Busca los 8 posibles vecinos de un tile, comenzando desde la esquina inferior izquierda y siguiendo el sentido de las manecillas del reloj.
-      neighbors[0] = Findneighbor(x - 1, z - 1);
-      neighbors[1] = Findneighbor(x - 1, z);
-      neighbors[2] = Findneighbor(x - 1, z + 1);
-      neighbors[3] = Findneighbor(x, z + 1);
-      neighbors[4] = Findneighbor(x + 1, z + 1);
-      neighbors[5] = Findneighbor(x + 1, z);
-      neighbors[6] = Findneighbor(x + 1, z - 1);
-      neighbors[7] = Findneighbor(x, z - 1);
+      // Busca los 8 posibles vecinos de un tile. Comienza desde la esquina inferior izquierda y sigue el sentido de las manecillas del reloj.
+      neighbors[0] = FindNeighbor(x - 1, z - 1);
+      neighbors[1] = FindNeighbor(x - 1, z);
+      neighbors[2] = FindNeighbor(x - 1, z + 1);
+      neighbors[3] = FindNeighbor(x, z + 1);
+      neighbors[4] = FindNeighbor(x + 1, z + 1);
+      neighbors[5] = FindNeighbor(x + 1, z);
+      neighbors[6] = FindNeighbor(x + 1, z - 1);
+      neighbors[7] = FindNeighbor(x, z - 1);
       Debug.Log(" -- Neighbors Establecidos para: " + tile.x + " " + tile.z);
 
       // Retorna la lista de vecinos
@@ -211,11 +187,12 @@ namespace Controllers
     /// <summary>
     /// Encuentra el vecino de un tile
     /// </summary>
-    static TileNode Findneighbor(int x, int z)
+    static TileNode FindNeighbor(int x, int z)
     {
       Debug.Log(" -- Buscando vecino: " + x + " " + z);
       try
       {
+        // Obtiene el tile vecino de la lista indexada de tiles
         TileNode node = TilesController.Find(x, z);
 
         if (node == null)
@@ -224,9 +201,10 @@ namespace Controllers
           return null;
         }
 
-        if (!node.closed)
+        // Si el tile vecino no es un tile cerrado, entonces se agrega a la lista de tiles a evaluar.
+        if (!node.GetClosed())
         {
-          TilesController.AddEvaluatedTile(node);
+          TilesController.AddOpenTile(node);
         }
 
         Debug.Log(" -- Vecino encontrado! " + x + " " + z);
