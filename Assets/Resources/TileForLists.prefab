@@ -111,3 +111,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blocked: 0
+  plate: {fileID: 6051019907965720163, guid: 505bf361664aeff4b99d72e2aeb98e8f, type: 3}

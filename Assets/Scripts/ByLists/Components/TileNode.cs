@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Threading.Tasks;
+using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 namespace Components
 {
@@ -13,12 +15,15 @@ namespace Components
     public bool blocked = false;
     private bool closed = false;
     public TileNode parent = null;
-    static readonly GameObject platePrefab = Resources.Load<GameObject>("Plane");
+    private GameObject plate;
 
     public TileNode(int x, int z)
     {
       this.x = x;
       this.z = z;
+      plate = Object.Instantiate(Resources.Load<GameObject>("Plane"));
+      plate.transform.position = new Vector3(x, 1.0f, z);
+      plate.SetActive(false);
     }
 
     public void SetGCost(int gCost)
@@ -35,10 +40,8 @@ namespace Components
 
     public async Task SetPath()
     {
-      // Instancia de un gameobject visual para el camino
-      GameObject plate = Object.Instantiate(platePrefab);
-      plate.transform.position = new Vector3(x, 1.0f, z);
-      plate.GetComponent<Renderer>().material.color = Global.YELLOW;
+      // Activa la placa asociada al nodo
+      plate.SetActive(true);
       Controllers.PathfindingController.path.Add(this);
       if (parent == null) return;
       await parent.SetPath();
@@ -56,6 +59,7 @@ namespace Components
       g = 0;
       h = 0;
       f = 0;
+      plate.SetActive(false);
     }
 
     public void SetClosed(bool closed)

@@ -81,12 +81,6 @@ namespace Controllers
       {
         if (destination.transform.position.x == tile.transform.position.x && destination.transform.position.z == tile.transform.position.z) return;
         destination = tile;
-        GameObject[] plates = GameObject.FindGameObjectsWithTag("Plate");
-        foreach (GameObject plate in plates)
-        {
-          Debug.Log("Placa destruida! ");
-          plate.SetActive(false);
-        }
         PathfindingController.ResetTiles();
         await PathfindingController.Path();
       }
