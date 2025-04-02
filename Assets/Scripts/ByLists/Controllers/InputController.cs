@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Controllers
@@ -10,11 +12,11 @@ namespace Controllers
     /// <summary>
     /// Asigna el tile seleccionado por el usuario como origen o destino.
     /// </summary>
-    public static async void SetTile(GameObject tile)
+    public static async Task<int> SetInput(GameObject tile)
     {
 
       // Si el tile está bloqueado, no se puede seleccionar.
-      if (tile.GetComponent<Components.Tile>().blocked) return;
+      if (tile.GetComponent<Components.Tile>().blocked) return 2;
 
       // Si no hay un origen, se asigna el tile seleccionado como origen.
       if (origin == null)
@@ -22,7 +24,7 @@ namespace Controllers
         Debug.Log("Estableciendo origen: " + tile.transform.position);
         origin = tile;
         tile.GetComponent<Renderer>().material.color = Global.GREEN;
-        return;
+        return 0;
       }
 
       // Si no hay un destino, se asigna el tile seleccionado como destino.
@@ -33,41 +35,38 @@ namespace Controllers
         {
           // Si el destino es el mismo que el origen, no se puede seleccionar.
           Debug.Log("El destino no puede ser el mismo que el origen.");
-          return;
+          return 2;
         }
-
         destination = tile;
         tile.GetComponent<Renderer>().material.color = Global.BLUE;
 
         // Se ejecuta el pathfinding y el movimiento.
         Debug.Log("Cargando camino...");
         await PathfindingController.Path();
-        return;
+        return 0;
       }
 
       // Si ya hay un origen y un destino, se reinician los tiles y se asigna el nuevo tile seleccionado como destino.
-      PathfindingController.ResetTiles();
+      TilesController.ResetTiles();
       origin.GetComponent<Components.Tile>().Reset();
       destination.GetComponent<Components.Tile>().Reset();
-      GameObject[] plates = GameObject.FindGameObjectsWithTag("Plate");
-      Debug.Log("Destruyendo el camino de placas...");
-      foreach (GameObject plate in plates)
-      {
-        Debug.Log("Placa destruida! ");
-        Object.Destroy(plate);
-      }
 
       Debug.Log("Estableciendo origen y destino: " + tile.transform.position);
       origin = destination;
       destination = tile;
       tile.GetComponent<Renderer>().material.color = Global.GREEN;
       origin.GetComponent<Renderer>().material.color = Global.BLUE;
-      await PathfindingController.Path();
+
+      Debug.Log("Cargando camino...");
+      return await PathfindingController.Path();
     }
 
-    public static async void SetTileWhenMouseEnter(GameObject tile)
+    /// <summary>
+    /// Asigna el tile por donde el mouse haya pasado por encima
+    /// </summary>
+    public static async void SetInputWhenMouseEnter(GameObject tile)
     {
-      if(!tile.CompareTag("Tile")) return;
+      if (!tile.CompareTag("Tile")) return;
       if (origin == null) return;
       if (tile.GetComponent<Components.Tile>().blocked) return;
       if (tile.transform.position.x == origin.transform.position.x && tile.transform.position.z == origin.transform.position.z) return;
@@ -76,18 +75,31 @@ namespace Controllers
       {
         destination = tile;
         Debug.Log("Estableciendo destino: " + tile.transform.position);
+
+        await PathfindingController.Path();
+        return;
       }
       else
       {
         if (destination.transform.position.x == tile.transform.position.x && destination.transform.position.z == tile.transform.position.z) return;
+
+        // Vector3 lastDestination = new(destination.transform.position.x, 0, destination.transform.position.z);
+        Debug.Log("Estableciendo destino: " + tile.transform.position);
         destination = tile;
-        PathfindingController.ResetTiles();
+        TilesController.ResetTiles();
+
+        Debug.Log("El camino ya ha sido evaludo??");
+        bool alreadyEvaluated = TilesController.IsTheDestinationAlreadyEvaluated((int)tile.transform.position.x, (int)tile.transform.position.z);
+        
+        if (alreadyEvaluated)
+        {
+          TilesController.SetPath((int)tile.transform.position.x, (int)tile.transform.position.z);
+          Debug.Log("[InputController]: El destino ya ha sido evaluado.");
+          return;
+        }
+
         await PathfindingController.Path();
       }
     }
   }
 }
-
-/// <summary> 
-/// Lectura de la interacción del usuario con los tiles.
-/// </summary>

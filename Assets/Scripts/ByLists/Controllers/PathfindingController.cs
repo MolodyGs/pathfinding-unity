@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Components;
 using UnityEngine;
+using Components;
 
 namespace Controllers
 {
@@ -11,12 +11,10 @@ namespace Controllers
   /// </summary>
   public static class PathfindingController
   {
-    public static List<TileNode> path = new();
-
     /// <summary>
     /// Inicia el proceso de Pathfinding para encontrar el camino más corto entre dos puntos.
     /// </summary>
-    public static async Task Path()
+    public static async Task<int> Path()
     {
       // Obtiene el tile de origen.
       TileNode origin = TilesController.Find((int)InputController.origin.transform.position.x, (int)InputController.origin.transform.position.z);
@@ -34,12 +32,13 @@ namespace Controllers
       if (lastTile == null)
       {
         Debug.Log("No se encontró un camino entre el origen y el destino.");
-        NoPath();
-        return;
+        return 1;
       }
 
       // Si el último tile evaluado corresponde al destino, entonces se obtiene el camino más corto.
       await lastTile.SetPath();
+      TilesController.SetNewPath(lastTile.x, lastTile.z);
+      return 0;
     }
 
     /// <summary>
@@ -117,8 +116,10 @@ namespace Controllers
         }
       }
 
-      // Retorna el mejor tile encontrado.
       bestTile.SetClosed(true);
+
+      Debug.Log("El mejor tile: " + bestTile.x + " " + bestTile.z + " g: " + bestTile.g + " h: " + bestTile.h + " f: " + bestTile.f);
+      // Retorna el mejor tile encontrado.
       return bestTile;
     }
 
@@ -228,29 +229,6 @@ namespace Controllers
 
       // Retona el costo de H para el tile teniendo en cuenta diagonalidad.
       return 10 * (int)Math.Abs(x - z) + 14 * (int)(x > z ? z : x);
-    }
-
-    /// <summary>
-    /// Reinicia los tiles del mapa y el camino más corto.
-    /// </summary>
-    public static void ResetTiles()
-    {
-      path = new();
-      TilesController.ResetTiles();
-    }
-
-    /// <summary>
-    /// Establece los tiles activos con el color rojo para indicar visualmente que no hay camino.
-    /// </summary>
-    public static void NoPath()
-    {
-      // foreach (TileNode tile in TilesController.tiles)
-      // {
-      //   if (tile.closed)
-      //   {
-      //     tile.GetComponent<Renderer>().material.color = Global.RED;
-      //   }
-      // }
     }
   }
 }

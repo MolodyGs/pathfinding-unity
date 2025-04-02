@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Components
 {
   /// <summary>
-  /// Asigna el tile seleccionado por el usuario como origen o destino.
+  /// Clase utilizada para representar un tile en el mapa como un componente para una GameObject.
   /// </summary>
   public class Tile : MonoBehaviour
   {
@@ -14,8 +14,8 @@ namespace Components
     /// <summary>
     /// Asigna el tile seleccionado por el usuario como origen o destino.
     /// </summary>
-    void OnMouseDown() { Controllers.InputController.SetTile(gameObject); }
-    void OnMouseEnter() { Controllers.InputController.SetTileWhenMouseEnter(gameObject); }
+    public async void OnMouseDown() { await Controllers.InputController.SetInput(gameObject); }
+    public void OnMouseEnter() { Controllers.InputController.SetInputWhenMouseEnter(gameObject); }
 
     public void Reset()
     {

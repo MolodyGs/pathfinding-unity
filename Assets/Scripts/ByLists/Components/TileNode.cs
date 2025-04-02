@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Threading.Tasks;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
 
 namespace Components
 {
@@ -38,13 +36,27 @@ namespace Components
       f = g + h;
     }
 
-    public async Task SetPath()
+    public async Task<int> SetPath()
     {
-      // Activa la placa asociada al nodo
-      plate.SetActive(true);
-      Controllers.PathfindingController.path.Add(this);
-      if (parent == null) return;
-      await parent.SetPath();
+      try
+      {
+        // Activa la placa asociada al nodo
+        plate.SetActive(true);
+
+        // Añade el nodo a la lista de nodos para el camino
+        Controllers.TilesController.path.Add(this);
+
+        // Verifica que el padre exista
+        if (parent == null) return 0;
+
+        // Si el padre no es nulo, entonces llama a su método SetPath de forma recursiva
+        return await parent.SetPath();
+      }
+      catch (System.Exception e)
+      {
+        Debug.LogError("Error al intentar recuperar al padre SetPath: " + e.Message);
+        return -1; 
+      }
     }
 
     public Vector2 GetPosition()
@@ -70,6 +82,11 @@ namespace Components
     public bool GetClosed()
     {
       return closed;
+    }
+
+    public void SetPlate(bool state)
+    {
+        plate.SetActive(state);
     }
   }
 }

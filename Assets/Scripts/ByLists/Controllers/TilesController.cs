@@ -1,12 +1,22 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http.Headers;
 using Components;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
+
+
 namespace Controllers
 {
+
+  public struct Paths
+  {
+    public List<TileNode> path;
+  }
+
   /// <summary>
   /// Controla la creación y lectura de los tiles del juego.
   /// </summary>
@@ -14,6 +24,8 @@ namespace Controllers
   {
     // Lista de tiles con acceso indexado (O(1))
     private static TileNode[,] tiles = new TileNode[100, 100];
+    public static List<TileNode> path = new();
+    public static Paths[,] pathsAlreadyEvaluated = new Paths[100, 100];
     public static List<TileNode> openTiles = new();
 
     public static void AddTileFromScene()
@@ -95,11 +107,47 @@ namespace Controllers
 
     public static void ResetTiles()
     {
+      Debug.Log("Reiniciando el camino y tiles actualmente evaluados.");
+      path = new();
       openTiles.Clear();
       foreach (TileNode tile in tiles)
       {
         if (tile == null) continue;
         tile.Reset();
+      }
+    }
+
+    public static void SetNewPath(int x, int z)
+    {
+      Debug.Log("Estableciendo tile para el camino evaluado: " + x + " " + z);
+      Debug.Log("Último tile agregado: " + path.Last().x + " " + path.Last().z);
+      // Si el tile no ha sido evaluado, se crea una nueva lista de caminos.
+      if (pathsAlreadyEvaluated[x, z].path == null)
+      {
+        pathsAlreadyEvaluated[x, z].path = path;
+      }
+      else
+      {
+        Debug.Log("El camino ya ha sido evaluado y agregado a la lista de paths.");
+      }
+    }
+
+    public static bool IsTheDestinationAlreadyEvaluated(int x, int z)
+    {
+      Debug.Log("Comprobando si el tile ya ha sido evaluado: " + x + " " + z);
+      bool alreadyEvaluated = pathsAlreadyEvaluated[x, z].path != null;
+      Debug.Log("Destino evaluado?: " + alreadyEvaluated);
+      return alreadyEvaluated;
+    }
+
+    public static void SetPath(int x, int z)
+    {
+      Debug.Log("Estableciendo el camino ya evaluado para el destino: " + x + " " + z);
+      ResetTiles();
+      
+      foreach (TileNode tile in pathsAlreadyEvaluated[x, z].path)
+      {
+          tile.SetPlate(true);
       }
     }
   }
