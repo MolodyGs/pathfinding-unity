@@ -24,18 +24,6 @@ namespace Components
       plate.SetActive(false);
     }
 
-    public void SetGCost(int gCost)
-    {
-      g = gCost;
-      f = g + h;
-    }
-
-    public void SetHCost(int hCost)
-    {
-      h = hCost;
-      f = g + h;
-    }
-
     public async Task<int> SetPath()
     {
       try
@@ -55,13 +43,8 @@ namespace Components
       catch (System.Exception e)
       {
         Debug.LogError("Error al intentar recuperar al padre SetPath: " + e.Message);
-        return -1; 
+        return -1;
       }
-    }
-
-    public Vector2 GetPosition()
-    {
-      return new Vector2(x, z);
     }
 
     public void Reset()
@@ -72,6 +55,23 @@ namespace Components
       h = 0;
       f = 0;
       plate.SetActive(false);
+    }
+
+    public void SetGCost(int gCost)
+    {
+      g = gCost;
+      f = g + h;
+    }
+
+    public void SetHCost(int hCost)
+    {
+      h = hCost;
+      f = g + h;
+    }
+
+    public Vector2 GetPosition()
+    {
+      return new Vector2(x, z);
     }
 
     public void SetClosed(bool closed)
@@ -86,7 +86,7 @@ namespace Components
 
     public void SetPlate(bool state)
     {
-        plate.SetActive(state);
+      plate.SetActive(state);
     }
   }
 }

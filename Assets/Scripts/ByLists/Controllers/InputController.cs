@@ -69,8 +69,12 @@ namespace Controllers
       if (!tile.CompareTag("Tile")) return;
       if (origin == null) return;
       if (tile.GetComponent<Components.Tile>().blocked) return;
+
+      // Comprueba que el tile no sea el mismo que el origen
       if (tile.transform.position.x == origin.transform.position.x && tile.transform.position.z == origin.transform.position.z) return;
 
+
+      // Si no existe un destino, se asigna el tile seleccionado como destino.
       if (destination == null)
       {
         destination = tile;
@@ -81,16 +85,20 @@ namespace Controllers
       }
       else
       {
+        // Comprueba que el nuevo tile de destino no sea el mismo que el destino actual
         if (destination.transform.position.x == tile.transform.position.x && destination.transform.position.z == tile.transform.position.z) return;
 
-        // Vector3 lastDestination = new(destination.transform.position.x, 0, destination.transform.position.z);
         Debug.Log("Estableciendo destino: " + tile.transform.position);
         destination = tile;
+
+        // Reinicia los tiles para evitar que se mantengan los caminos anteriores
         TilesController.ResetTiles();
 
+        // Comprueba si el destino ya ha sido evaluado
         Debug.Log("El camino ya ha sido evaludo??");
         bool alreadyEvaluated = TilesController.IsTheDestinationAlreadyEvaluated((int)tile.transform.position.x, (int)tile.transform.position.z);
         
+        // Momento donde se decide si se va a evaluar el camino o no.
         if (alreadyEvaluated)
         {
           TilesController.SetPath((int)tile.transform.position.x, (int)tile.transform.position.z);

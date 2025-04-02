@@ -52,12 +52,90 @@ namespace Controllers
       }
     }
 
+    /// <summary>
+    /// Remueve un tile de la lista de tiles evaluados.
+    /// </summary>
+    public static void RemoveTileEvaluated(TileNode tileToRemove)
+    {
+      Debug.Log("Removiendo tile: " + tileToRemove.x + " " + tileToRemove.z);
+      // Establece el tile como cerrado y lo elimina de la lista de tiles evaluados.
+      foreach (TileNode tile in openTiles)
+      {
+        if (tile.GetPosition() == tileToRemove.GetPosition())
+        {
+          Debug.Log("Tile Encontrado: " + tile.x + " " + tile.z);
+          bool response = openTiles.Remove(tile);
+          Debug.Log("Tile removido?: " + response);
+          return;
+        }
+      }
+    }
+
+    /// <summary>
+    /// Resetea los tiles y el camino actualmente evaluado.
+    /// </summary>
+    public static void ResetTiles()
+    {
+      Debug.Log("Reiniciando el camino y tiles actualmente evaluados.");
+      path = new();
+      openTiles.Clear();
+      foreach (TileNode tile in tiles)
+      {
+        if (tile == null) continue;
+        tile.Reset();
+      }
+    }
+
+    /// <summary>
+    /// Establece un nuevo camino a la lista de paths ya evaluados.
+    /// </summary> 
+    public static void SetNewPath(int x, int z)
+    {
+      Debug.Log("Estableciendo tile para el camino evaluado: " + x + " " + z);
+      Debug.Log("Último tile agregado: " + path.Last().x + " " + path.Last().z);
+      // Si el tile no ha sido evaluado, se crea una nueva lista de caminos.
+      if (pathsAlreadyEvaluated[x, z].path == null)
+      {
+        pathsAlreadyEvaluated[x, z].path = path;
+      }
+      else
+      {
+        Debug.Log("El camino ya ha sido evaluado y agregado a la lista de paths.");
+      }
+    }
+
+    /// <summary>
+    /// Verifica si el destino ya ha sido evaluado anteriormente.
+    /// </summary> 
+    public static bool IsTheDestinationAlreadyEvaluated(int x, int z)
+    {
+      Debug.Log("Comprobando si el tile ya ha sido evaluado: " + x + " " + z);
+      return pathsAlreadyEvaluated[x, z].path != null;
+    }
+
+    /// <summary>
+    /// Establece el camino evaluado anteriormente para el destino ya evaluado.
+    /// </summary>
+    public static void SetPath(int x, int z)
+    {
+      Debug.Log("Estableciendo el camino ya evaluado para el destino: " + x + " " + z);
+      ResetTiles();
+
+      foreach (TileNode tile in pathsAlreadyEvaluated[x, z].path)
+      {
+        tile.SetPlate(true);
+      }
+    }
+
     public static void AddTile(int x, int z, bool blocked)
     {
-      tiles[x, z] = new TileNode(x, z)
-      {
-        blocked = blocked
-      };
+      tiles[x, z] = new TileNode(x, z) { blocked = blocked };
+    }
+
+    public static void AddOpenTile(TileNode tile)
+    {
+      Debug.Log("Añadiendo tile a la lista de tiles abiertos: " + tile.x + " " + tile.z);
+      openTiles.Add(tile);
     }
 
     public static TileNode Find(int x, int z)
@@ -78,77 +156,6 @@ namespace Controllers
     public static bool IsBlocked(int x, int z)
     {
       return tiles[x, z].blocked;
-    }
-
-    public static void AddOpenTile(TileNode tile)
-    {
-      Debug.Log("Añadiendo tile a la lista de tiles abiertos: " + tile.x + " " + tile.z);
-      openTiles.Add(tile);
-    }
-
-    /// <summary>
-    /// Remueve un tile de la lista de tiles evaluados.
-    /// </summary>
-    public static void RemoveTileEvaluated(TileNode tileToRemove)
-    {
-      Debug.Log("Removiendo tile: " + tileToRemove.x + " " + tileToRemove.z);
-      // Establece el tile como cerrado y lo elimina de la lista de tiles evaluados.
-      foreach (TileNode tile in openTiles)
-      {
-        if (tile.GetPosition() == tileToRemove.GetPosition())
-        {
-          Debug.Log("Tile Encontrado: " + tile.x + " " + tile.z);
-          bool response = openTiles.Remove(tile);
-          Debug.Log("Tile removido?: " + response);
-          return;
-        }
-      }
-    }
-
-    public static void ResetTiles()
-    {
-      Debug.Log("Reiniciando el camino y tiles actualmente evaluados.");
-      path = new();
-      openTiles.Clear();
-      foreach (TileNode tile in tiles)
-      {
-        if (tile == null) continue;
-        tile.Reset();
-      }
-    }
-
-    public static void SetNewPath(int x, int z)
-    {
-      Debug.Log("Estableciendo tile para el camino evaluado: " + x + " " + z);
-      Debug.Log("Último tile agregado: " + path.Last().x + " " + path.Last().z);
-      // Si el tile no ha sido evaluado, se crea una nueva lista de caminos.
-      if (pathsAlreadyEvaluated[x, z].path == null)
-      {
-        pathsAlreadyEvaluated[x, z].path = path;
-      }
-      else
-      {
-        Debug.Log("El camino ya ha sido evaluado y agregado a la lista de paths.");
-      }
-    }
-
-    public static bool IsTheDestinationAlreadyEvaluated(int x, int z)
-    {
-      Debug.Log("Comprobando si el tile ya ha sido evaluado: " + x + " " + z);
-      bool alreadyEvaluated = pathsAlreadyEvaluated[x, z].path != null;
-      Debug.Log("Destino evaluado?: " + alreadyEvaluated);
-      return alreadyEvaluated;
-    }
-
-    public static void SetPath(int x, int z)
-    {
-      Debug.Log("Estableciendo el camino ya evaluado para el destino: " + x + " " + z);
-      ResetTiles();
-      
-      foreach (TileNode tile in pathsAlreadyEvaluated[x, z].path)
-      {
-          tile.SetPlate(true);
-      }
     }
   }
 }
