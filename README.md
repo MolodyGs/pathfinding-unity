@@ -43,4 +43,4 @@ En `App.cs` es donde, mediante la clase estática `TilesController.cs`, el proye
 
 ## Galería
 
-![](/Assets/Resources/media/example1.mp4)
+![](/Assets/Resources/media/example1.gif)
