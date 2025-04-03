@@ -21,3 +21,4 @@ En `Main.cs` es donde, mediante la clase estática `TilesController.cs`, el proy
 ## Galería
 
 ![](/Assets/Resources/media/example1.gif)
+![](/Assets/Resources/media/example2.gif)
