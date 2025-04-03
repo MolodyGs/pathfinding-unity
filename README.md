@@ -43,7 +43,4 @@ En `App.cs` es donde, mediante la clase estática `TilesController.cs`, el proye
 
 ## Galería
 
-<video width="600" controls loop autoplay muted playsinline>
-  <source src="Assets/Resources/media/example1.mp4" type="video/mp4">
-  Tu navegador no soporta videos.
-</video>
+![](/Assets/Resources/media/example1.mp4)
