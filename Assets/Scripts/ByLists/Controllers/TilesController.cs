@@ -23,10 +23,10 @@ namespace Controllers
   public static class TilesController
   {
     // Lista de tiles con acceso indexado (O(1))
-    private static TileNode[,] tiles = new TileNode[100, 100];
+    public static TileNode[,] tiles = new TileNode[100, 100];
+    public static GameObject[,] tilesObj = new GameObject[100, 100];
     public static List<TileNode> path = new();
     public static Paths[,] pathsAlreadyEvaluated = new Paths[100, 100];
-    public static List<TileNode> openTiles = new();
 
     public static void AddTileFromScene()
     {
@@ -35,6 +35,7 @@ namespace Controllers
       for (int i = 0; i < gameObjectTilesParent.transform.childCount; i++)
       {
         Transform tile = gameObjectTilesParent.transform.GetChild(i).transform;
+        tilesObj[(int)tile.position.x, (int)tile.position.z] = tile.gameObject;
         AddTile((int)tile.position.x, (int)tile.position.z, tile.GetComponent<Components.Tile>().blocked);
         if (tile.GetComponent<Components.Tile>().blocked)
         {
@@ -53,36 +54,16 @@ namespace Controllers
     }
 
     /// <summary>
-    /// Remueve un tile de la lista de tiles evaluados.
-    /// </summary>
-    public static void RemoveTileEvaluated(TileNode tileToRemove)
-    {
-      Debug.Log("Removiendo tile: " + tileToRemove.x + " " + tileToRemove.z);
-      // Establece el tile como cerrado y lo elimina de la lista de tiles evaluados.
-      foreach (TileNode tile in openTiles)
-      {
-        if (tile.GetPosition() == tileToRemove.GetPosition())
-        {
-          Debug.Log("Tile Encontrado: " + tile.x + " " + tile.z);
-          bool response = openTiles.Remove(tile);
-          Debug.Log("Tile removido?: " + response);
-          return;
-        }
-      }
-    }
-
-    /// <summary>
     /// Resetea los tiles y el camino actualmente evaluado.
     /// </summary>
-    public static void ResetTiles()
+    public static void ResetTiles(bool softReset = false)
     {
       Debug.Log("Reiniciando el camino y tiles actualmente evaluados.");
       path = new();
-      openTiles.Clear();
       foreach (TileNode tile in tiles)
       {
         if (tile == null) continue;
-        tile.Reset();
+        tile.Reset(softReset);
       }
     }
 
@@ -92,7 +73,6 @@ namespace Controllers
     public static void SetNewPath(int x, int z)
     {
       Debug.Log("Estableciendo tile para el camino evaluado: " + x + " " + z);
-      Debug.Log("Último tile agregado: " + path.Last().x + " " + path.Last().z);
       // Si el tile no ha sido evaluado, se crea una nueva lista de caminos.
       if (pathsAlreadyEvaluated[x, z].path == null)
       {
@@ -132,14 +112,13 @@ namespace Controllers
       tiles[x, z] = new TileNode(x, z) { blocked = blocked };
     }
 
-    public static void AddOpenTile(TileNode tile)
-    {
-      Debug.Log("Añadiendo tile a la lista de tiles abiertos: " + tile.x + " " + tile.z);
-      openTiles.Add(tile);
-    }
-
     public static TileNode Find(int x, int z)
     {
+      if (x >= tiles.GetLength(0) || z >= tiles.GetLength(1) || x < 0 || z < 0)
+      {
+        Debug.LogError("Tile fuera de rango: " + x + " " + z);
+        return null;
+      }
       return tiles[x, z];
     }
 

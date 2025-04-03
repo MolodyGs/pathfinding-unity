@@ -15,7 +15,7 @@ namespace Components
     /// Asigna el tile seleccionado por el usuario como origen o destino.
     /// </summary>
     public async void OnMouseDown() { await Controllers.InputController.SetInput(gameObject); }
-    public void OnMouseEnter() { Controllers.InputController.SetInputWhenMouseEnter(gameObject); }
+    // public void OnMouseEnter() { Controllers.InputController.SetInputWhenMouseEnter(gameObject); }
 
     public void Reset()
     {

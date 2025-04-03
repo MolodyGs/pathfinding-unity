@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using TMPro;
 
 namespace Components
 {
@@ -12,6 +14,7 @@ namespace Components
     public int f = 0;
     public bool blocked = false;
     private bool closed = false;
+    public bool isAdded = false;
     public TileNode parent = null;
     private GameObject plate;
 
@@ -24,7 +27,7 @@ namespace Components
       plate.SetActive(false);
     }
 
-    public async Task<int> SetPath()
+    public async Task<int> SetPath(List<TileNode> path)
     {
       try
       {
@@ -32,13 +35,15 @@ namespace Components
         plate.SetActive(true);
 
         // Añade el nodo a la lista de nodos para el camino
-        Controllers.TilesController.path.Add(this);
+        path.Add(this);
+
+        plate.GetComponent<Renderer>().material.color = Global.GREEN;
 
         // Verifica que el padre exista
         if (parent == null) return 0;
 
         // Si el padre no es nulo, entonces llama a su método SetPath de forma recursiva
-        return await parent.SetPath();
+        return await parent.SetPath(path);
       }
       catch (System.Exception e)
       {
@@ -47,26 +52,30 @@ namespace Components
       }
     }
 
-    public void Reset()
+    public void Reset(bool softReset = false)
     {
       closed = false;
+      isAdded = false;
       parent = null;
       g = 0;
       h = 0;
       f = 0;
-      plate.SetActive(false);
+      if (!softReset) plate.SetActive(false);
+      SetText();
     }
 
     public void SetGCost(int gCost)
     {
       g = gCost;
       f = g + h;
+      SetText();
     }
 
     public void SetHCost(int hCost)
     {
       h = hCost;
       f = g + h;
+      SetText();
     }
 
     public Vector2 GetPosition()
@@ -87,6 +96,25 @@ namespace Components
     public void SetPlate(bool state)
     {
       plate.SetActive(state);
+    }
+
+    public override string ToString()
+    {
+      return $"TileNode: ({x}, {z}) - G: {g}, H: {h}, F: {f}, Blocked: {blocked}, Closed: {closed}";
+    }
+
+    public void SetPlateColor(Color color)
+    {
+      plate.GetComponent<Renderer>().material.color = color;
+    }
+
+    public void SetText()
+    {
+      plate.GetComponentInChildren<TMP_Text>().text =
+        "g: " + g + "\n" +
+        "h: " + h + "\n" +
+        "f: " + f + "\n"
+      ;
     }
   }
 }

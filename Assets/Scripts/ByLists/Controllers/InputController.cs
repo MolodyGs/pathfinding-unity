@@ -42,11 +42,11 @@ namespace Controllers
 
         // Se ejecuta el pathfinding y el movimiento.
         Debug.Log("Cargando camino...");
-        await PathfindingController.Path();
+        await ParallelController.Start();
         return 0;
       }
 
-      // Si ya hay un origen y un destino, se reinician los tiles y se asigna el nuevo tile seleccionado como destino.
+      // Reinicia los tiles para evitar que se mantengan los caminos anteriores
       TilesController.ResetTiles();
       origin.GetComponent<Components.Tile>().Reset();
       destination.GetComponent<Components.Tile>().Reset();
@@ -54,11 +54,24 @@ namespace Controllers
       Debug.Log("Estableciendo origen y destino: " + tile.transform.position);
       origin = destination;
       destination = tile;
+
+      // Comprueba si el destino ya ha sido evaluado
+      Debug.Log("El camino ya ha sido evaludo??");
+      bool alreadyEvaluated = TilesController.IsTheDestinationAlreadyEvaluated((int)tile.transform.position.x, (int)tile.transform.position.z);
+
+      // Momento donde se decide si se va a evaluar el camino o no.
+      if (alreadyEvaluated)
+      {
+        TilesController.SetPath((int)tile.transform.position.x, (int)tile.transform.position.z);
+        Debug.Log("[InputController]: El destino ya ha sido evaluado.");
+        return 0;
+      }
+
       tile.GetComponent<Renderer>().material.color = Global.GREEN;
       origin.GetComponent<Renderer>().material.color = Global.BLUE;
 
       Debug.Log("Cargando camino...");
-      return await PathfindingController.Path();
+      return await ParallelController.Start();
     }
 
     /// <summary>
@@ -80,7 +93,7 @@ namespace Controllers
         destination = tile;
         Debug.Log("Estableciendo destino: " + tile.transform.position);
 
-        await PathfindingController.Path();
+        await ParallelController.Start();
         return;
       }
       else
@@ -94,19 +107,19 @@ namespace Controllers
         // Reinicia los tiles para evitar que se mantengan los caminos anteriores
         TilesController.ResetTiles();
 
-        // Comprueba si el destino ya ha sido evaluado
-        Debug.Log("El camino ya ha sido evaludo??");
-        bool alreadyEvaluated = TilesController.IsTheDestinationAlreadyEvaluated((int)tile.transform.position.x, (int)tile.transform.position.z);
-        
-        // Momento donde se decide si se va a evaluar el camino o no.
-        if (alreadyEvaluated)
-        {
-          TilesController.SetPath((int)tile.transform.position.x, (int)tile.transform.position.z);
-          Debug.Log("[InputController]: El destino ya ha sido evaluado.");
-          return;
-        }
+        // // Comprueba si el destino ya ha sido evaluado
+        // Debug.Log("El camino ya ha sido evaludo??");
+        // bool alreadyEvaluated = TilesController.IsTheDestinationAlreadyEvaluated((int)tile.transform.position.x, (int)tile.transform.position.z);
 
-        await PathfindingController.Path();
+        // // Momento donde se decide si se va a evaluar el camino o no.
+        // if (alreadyEvaluated)
+        // {
+        //   TilesController.SetPath((int)tile.transform.position.x, (int)tile.transform.position.z);
+        //   Debug.Log("[InputController]: El destino ya ha sido evaluado.");
+        //   return;
+        // }
+
+        await ParallelController.Start();
       }
     }
   }
