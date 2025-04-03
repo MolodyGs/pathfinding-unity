@@ -23,12 +23,13 @@ namespace Components
       this.x = x;
       this.z = z;
       plate = Object.Instantiate(Resources.Load<GameObject>("Plane"));
-      plate.transform.position = new Vector3(x, 1.0f, z);
+      plate.transform.position = new Vector3(x, 0.5f, z);
       plate.SetActive(false);
     }
 
     public async Task<int> SetPath(List<TileNode> path)
     {
+      Debug.Log("SetPath: " + x + ", " + z + " - Path Count: " + path.Count);
       try
       {
         // Activa la placa asociada al nodo
@@ -37,7 +38,7 @@ namespace Components
         // Añade el nodo a la lista de nodos para el camino
         path.Add(this);
 
-        plate.GetComponent<Renderer>().material.color = Global.GREEN;
+        SetPlateColor(Global.GREEN);
 
         // Verifica que el padre exista
         if (parent == null) return 0;
@@ -105,6 +106,7 @@ namespace Components
 
     public void SetPlateColor(Color color)
     {
+      Debug.Log("Cambiando Color del nodo: " + x + ", " + z + " a: " + color);
       plate.GetComponent<Renderer>().material.color = color;
     }
 
