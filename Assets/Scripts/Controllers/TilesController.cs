@@ -30,7 +30,7 @@ namespace Controllers
 
     public static void AddTileFromScene()
     {
-      Debug.Log("Cargando Tiles");
+      Debug.Log("Cargando Tiles...");
       GameObject gameObjectTilesParent = GameObject.Find("TilesForLists");
       for (int i = 0; i < gameObjectTilesParent.transform.childCount; i++)
       {

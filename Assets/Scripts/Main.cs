@@ -5,7 +5,7 @@ public class Main : MonoBehaviour
 {
   public void Start()
   {
-    Debug.Log("Cargando tiles...");
+    // Comienza el proceso inicial de la escena, inicializando el controlador de pathfinding y el controlador de tiles.
     Controllers.ParallelController.Initialize();
     // Controllers.InputController.origin = Controllers.TilesController.tilesObj[18, 0];
     // GameObject destination;

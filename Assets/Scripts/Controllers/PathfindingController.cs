@@ -8,6 +8,7 @@ namespace Controllers
 {
   /// <summary>
   /// Controlador de Pathfinding para encontrar el camino más corto entre dos puntos mediante el algoritmo A* y por medio de tiles.
+  /// Es necesario que PathfindingController herede de MonoBehaviour para poder utilizar corrutinas y tareas asincrónicas.
   /// </summary>
   public class PathfindingController : MonoBehaviour
   {
