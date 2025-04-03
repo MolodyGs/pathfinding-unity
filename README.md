@@ -1,16 +1,16 @@
-# PathFinding - Unity
+# Pathfinding - Unity
 
 Proyecto hecho en **Unity versión 2021.3.8f1**.
 
-Mediante la utilización de **GameObjects**, se aplica el algoritmo de búsqueda A* (A estrella). Esto se logra mediante la identificación de los elementos de la escena, diferenciando entre lo que es un camino libre y uno bloqueado. Es posible cambiar la forma del camino mediante un archivo `tiles.json`, en el cual se define la posición bajo una perspectiva bidimensional (x, z con "y" como altura), además de un parámetro `blocked` para definir si ese tile corresponde a una sección bloqueada.
+Mediante la utilización de **GameObjects** se aplica el algoritmo de búsqueda A* (A estrella). Esto gracias a la identificación de los elementos de la escena, diferenciando entre lo que es un camino libre y uno bloqueado. Es posible cambiar la forma del camino mediante un archivo `tiles.json`, en el cual se define la posición bajo una perspectiva bidimensional (x, z con "y" como altura), además de un parámetro `blocked` para definir si ese tile corresponde a una sección bloqueada.
 
 ## Requisitos
 
-Es necesario contar con una versión de Unity compatible con la versión `2021.3.8f1`. No es necesario añadir librerías externas.
+Es necesario contar con la versión de Unity `2021.3.8f1` o una compatible. No es necesario añadir librerías externas.
 
 ## Estructura del Proyecto
 
-La estrucutra del proyecto sigue estos directorios:
+La estrucutra del proyecto está conformada por estos directorios:
 ```
 Pathfinding/
 ├─ Assets/
@@ -43,4 +43,7 @@ En `App.cs` es donde, mediante la clase estática `TilesController.cs`, el proye
 
 ## Galería
 
-...
+<video width="600" controls loop autoplay muted playsinline>
+  <source src="Resources/media/example1.mp4" type="video/mp4">
+  Tu navegador no soporta videos.
+</video>
