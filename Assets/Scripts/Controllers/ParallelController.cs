@@ -5,24 +5,23 @@ namespace Controllers
 {
   public static class ParallelController
   {
-    static PathfindingController pathfindingController;
+    static readonly GameObject pathfindingController = GameObject.Find("PathfindingController");
 
     public static void Initialize()
     {
       TilesController.AddTileFromScene();
-      pathfindingController = new();
     }
 
     public static async Task<int> Start()
     {
-      await pathfindingController.Path(InputController.origin.transform.position, InputController.destination.transform.position);
-      return 0;
+      return await pathfindingController.GetComponent<PathfindingController>().Path(InputController.origin.transform.position, InputController.destination.transform.position);
     }
 
-    public static async void Start(Vector3 origin, Vector3 destination)
+    public static async Task<int> Start(Vector3 origin, Vector3 destination)
     {
-      await pathfindingController.Path(origin, destination);
+      int response = await pathfindingController.GetComponent<PathfindingController>().Path(origin, destination);
       TilesController.ResetTiles(true);
+      return response;
     }
   }
 }
