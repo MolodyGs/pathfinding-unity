@@ -56,7 +56,7 @@ namespace Controllers
       await lastTileReference.SetPath(new());
       return 0;
     }
-    
+
     /// <summary>
     /// Comienza una corrutina y la convierte en una tarea.
     /// </summary>
@@ -126,8 +126,9 @@ namespace Controllers
     void EvaluateNeighborsCost(TileNode[] neighbors, TileNode tile)
     {
       // Itera entre los vecinos y evalua el costo de G y H de cada vecino.
-      foreach (TileNode neighbor in neighbors)
+      for (int i = 0; i < neighbors.Length; i++)
       {
+        TileNode neighbor = neighbors[i];
 
         // Si el vecino es nulo o está bloqueado, entonces se omite.
         if (neighbor == null || neighbor.blocked) { continue; }
@@ -137,6 +138,26 @@ namespace Controllers
 
         // Calcula el costo de G para el tile vecino.
         int gCost = distance > 1 ? 14 : 10;
+
+        // Si el tile corresponde a un movimiento diagonal, entonces se evalua si tiene tiles adyacentes bloqueados o inexistentes.
+        if (gCost == 14)
+        {
+          try
+          {
+            // Si al obtener el tile anterior o el siguiente, estos son nulos o están bloqueados, entonces se omite el tile en cuestión.
+            if (neighbors[i - 1].blocked && neighbors[i + 1].blocked)
+            {
+              Debug.Log("Omitiendo tile ya que tiene tiles bloqueados adyacentes " + neighbor.GetPosition() + " " + tile.GetPosition());
+              continue;
+            }
+          }
+          catch
+          {
+            // Cuando los tiles siguiente o anterior son nulos, entonces uno de ellos 2 son un hueco en el mapa.
+            Debug.Log("No se pudo obtener los vecinos adyacentes: " + neighbor.GetPosition() + " " + tile.GetPosition());
+            continue;
+          }
+        }
 
         // Suma el costo de G del tile activo al costo de G del tile vecino para obtener el costo G total
         gCost += tile.g;
