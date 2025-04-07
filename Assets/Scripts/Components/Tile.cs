@@ -1,5 +1,5 @@
-using Unity.VisualScripting;
 using UnityEngine;
+using Global;
 
 namespace Components
 {
@@ -19,7 +19,7 @@ namespace Components
 
     public void Reset()
     {
-      GetComponent<Renderer>().material.color = Global.WHITE;
+      GetComponent<Renderer>().material.color = Colors.WHITE;
     }
   }
 }

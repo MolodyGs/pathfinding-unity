@@ -1,17 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
 using Components;
-using JetBrains.Annotations;
-using Unity.VisualScripting;
 using UnityEngine;
-
-
-
+using Global;
 
 namespace Controllers
 {
-
   public struct Paths
   {
     public List<TileNode> path;
@@ -39,7 +32,7 @@ namespace Controllers
         AddTile((int)tile.position.x, (int)tile.position.z, tile.GetComponent<Components.Tile>().blocked);
         if (tile.GetComponent<Components.Tile>().blocked)
         {
-          tile.GetComponent<Renderer>().material.color = Global.RED;
+          tile.GetComponent<Renderer>().material.color = Colors.RED;
         }
         Debug.Log("Tile Cargado!");
       }
@@ -116,7 +109,7 @@ namespace Controllers
     {
       if (x >= tiles.GetLength(0) || z >= tiles.GetLength(1) || x < 0 || z < 0)
       {
-        Debug.LogError("Tile fuera de rango: " + x + " " + z);
+        Debug.Log("Tile fuera de rango: " + x + " " + z);
         return null;
       }
       return tiles[x, z];

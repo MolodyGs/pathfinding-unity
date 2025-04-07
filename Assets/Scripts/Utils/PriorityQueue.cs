@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PriorityQueue<T>
 {
-  private List<(T item, int priority)> heap = new List<(T, int)>();
+  private List<(T item, int[] priority)> heap = new List<(T, int[])>();
 
   public int Count => heap.Count;
 
-  public void Enqueue(T item, int priority)
+  public void Enqueue(T item, int[] priority)
   {
     heap.Add((item, priority));
     HeapifyUp(heap.Count - 1);
@@ -30,7 +30,8 @@ public class PriorityQueue<T>
     while (index > 0)
     {
       int parentIndex = (index - 1) / 2;
-      if (heap[parentIndex].priority <= heap[index].priority) break;
+      if (heap[parentIndex].priority[0] < heap[index].priority[0]) break;
+      if (heap[parentIndex].priority[0] == heap[index].priority[0] && heap[parentIndex].priority[1] < heap[index].priority[1]) break;
       (heap[parentIndex], heap[index]) = (heap[index], heap[parentIndex]);
       index = parentIndex;
     }
@@ -44,9 +45,11 @@ public class PriorityQueue<T>
       int right = index * 2 + 2;
       int smallest = index;
 
-      if (left < heap.Count && heap[left].priority < heap[smallest].priority)
+      if (left < heap.Count && (heap[left].priority[0] < heap[smallest].priority[0] ||
+          (heap[left].priority[0] == heap[smallest].priority[0] && heap[left].priority[1] < heap[smallest].priority[1])))
         smallest = left;
-      if (right < heap.Count && heap[right].priority < heap[smallest].priority)
+      if (right < heap.Count && (heap[right].priority[0] < heap[smallest].priority[0] ||
+          (heap[right].priority[0] == heap[smallest].priority[0] && heap[right].priority[1] < heap[smallest].priority[1])))
         smallest = right;
       if (smallest == index) break;
 

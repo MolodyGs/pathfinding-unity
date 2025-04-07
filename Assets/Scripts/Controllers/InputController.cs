@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+using Global;
 
 namespace Controllers
 {
@@ -23,7 +24,7 @@ namespace Controllers
       {
         Debug.Log("Estableciendo origen: " + tile.transform.position);
         origin = tile;
-        tile.GetComponent<Renderer>().material.color = Global.GREEN;
+        tile.GetComponent<Renderer>().material.color = Colors.GREEN;
         return 0;
       }
 
@@ -38,7 +39,7 @@ namespace Controllers
           return 2;
         }
         destination = tile;
-        tile.GetComponent<Renderer>().material.color = Global.BLUE;
+        tile.GetComponent<Renderer>().material.color = Colors.BLUE;
 
         // Se ejecuta el pathfinding y el movimiento.
         Debug.Log("Cargando camino...");
@@ -67,8 +68,8 @@ namespace Controllers
         return 0;
       }
 
-      tile.GetComponent<Renderer>().material.color = Global.GREEN;
-      origin.GetComponent<Renderer>().material.color = Global.BLUE;
+      tile.GetComponent<Renderer>().material.color = Colors.GREEN;
+      origin.GetComponent<Renderer>().material.color = Colors.BLUE;
 
       Debug.Log("Cargando camino...");
       return await ParallelController.Start();

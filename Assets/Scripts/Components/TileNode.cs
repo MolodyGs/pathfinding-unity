@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using TMPro;
+using Global;
 
 namespace Components
 {
@@ -16,7 +17,7 @@ namespace Components
     private bool closed = false;
     public bool isAdded = false;
     public TileNode parent = null;
-    private GameObject plate;
+    private readonly GameObject plate;
 
     public TileNode(int x, int z)
     {
@@ -25,6 +26,10 @@ namespace Components
       plate = Object.Instantiate(Resources.Load<GameObject>("Plane"));
       plate.transform.position = new Vector3(x, 0.5f, z);
       plate.SetActive(false);
+      if (!Settings.VISUAL_PATHFINDING)
+      {
+        plate.GetComponentInChildren<TMP_Text>().text = string.Empty;
+      }
     }
 
     public async Task<int> SetPath(List<TileNode> path)
@@ -38,7 +43,7 @@ namespace Components
         // Añade el nodo a la lista de nodos para el camino
         path.Add(this);
 
-        SetPlateColor(Global.GREEN);
+        SetPlateColor(Colors.GREEN);
 
         // Verifica que el padre exista
         if (parent == null) return 0;
@@ -62,7 +67,7 @@ namespace Components
       h = 0;
       f = 0;
       if (!softReset) plate.SetActive(false);
-      SetText();
+      CleanText();
     }
 
     public void SetGCost(int gCost)
@@ -110,13 +115,19 @@ namespace Components
       plate.GetComponent<Renderer>().material.color = color;
     }
 
-    public void SetText()
+    public void SetText(bool force = false)
     {
+      if (!Settings.VISUAL_PATHFINDING && !force) return;
       plate.GetComponentInChildren<TMP_Text>().text =
         "g: " + g + "\n" +
         "h: " + h + "\n" +
         "f: " + f + "\n"
       ;
+    }
+
+    public void CleanText()
+    {
+      plate.GetComponentInChildren<TMP_Text>().text = string.Empty;
     }
   }
 }
