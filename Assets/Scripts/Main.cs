@@ -5,8 +5,9 @@ public class Main : MonoBehaviour
 {
   public void Start()
   {
+    StartCoroutine(Controllers.Reader.ReadTxtFile("tiles.txt"));
+    // Controllers.ParallelController.Initialize();
     // Comienza el proceso inicial de la escena, inicializando el controlador de pathfinding y el controlador de tiles.
-    Controllers.ParallelController.Initialize();
     // Controllers.InputController.origin = Controllers.TilesController.tilesObj[18, 0];
     // GameObject destination;
 
