@@ -18,7 +18,6 @@ namespace Controllers
     PriorityQueue<TileNode> openTiles = new();
     private TileNode lastTileReference = null;
     private Vector3 destinationPosition;
-
     public GameObject LoadingText;
 
     /// <summary>
@@ -26,19 +25,31 @@ namespace Controllers
     /// </summary>
     public async Task<int> Path(Vector3 originPosition, Vector3 destinationPosition)
     {
+      // Se establece el estado inicial del controlador.
+      InitialState();
+
+      this.destinationPosition = destinationPosition;
+
+      LoadingText.GetComponent<TextMeshProUGUI>().text = "Loading...";
       LoadingText.SetActive(true);
       await Task.Delay(10);
-      int response = await StartPath(originPosition, destinationPosition);
-      LoadingText.SetActive(false);
+      int response = await StartPath(originPosition);
+      LoadingText.SetActive(response != 0);
       return response;
+    }
+
+    void InitialState()
+    {
+      openTiles = new();
+      lastTileReference = null;
+      destinationPosition = Vector3.zero;
     }
 
     /// <summary>
     /// Inicia el proceso de Pathfinding para encontrar el camino más corto entre dos puntos.
     /// </summary>
-    public async Task<int> StartPath(Vector3 originPosition, Vector3 destinationPosition)
+    public async Task<int> StartPath(Vector3 originPosition)
     {
-      this.destinationPosition = destinationPosition;
 
       // Obtiene el tile de origen.
       TileNode origin = TilesController.Find((int)originPosition.x, (int)originPosition.z);
@@ -50,8 +61,9 @@ namespace Controllers
         return 1;
       }
 
+      origin.SetClosed(true);
+
       // Se establecen los tiles abiertos como vacíos.
-      openTiles = new();
 
       // Calcula el costo de H para el tile de origen.
       int hCost = CalcHCost(origin);
@@ -62,7 +74,7 @@ namespace Controllers
       stopwatch.Start(); 
 
       // Determina si debe realizar pausas entre cada iteración Según el valor de VISUAL_PATHFINDING.
-      if (Settings.VISUAL_PATHFINDING)
+      if (Settings.VISUAL_PATHFINDING.value)
       {
         await RunCoroutineAsTask(VisualEvaluateTile(origin));
       }
@@ -78,6 +90,7 @@ namespace Controllers
       if (lastTileReference == null)
       {
         UnityEngine.Debug.Log("No se encontró un camino entre el origen y el destino.");
+        LoadingText.GetComponent<TextMeshProUGUI>().text = "Path not found!";
         return 1;
       }
 
@@ -118,7 +131,7 @@ namespace Controllers
         yield return new WaitForSeconds(0.05f);
 
         // Si STEPS está activado, entonces espera a que el usuario presione la barra espaciadora para continuar.
-        if (Settings.STEPS)
+        if (Settings.STEPS.value)
         {
           UnityEngine.Debug.Log("Esperando a que se presione la barra espaciadora...");
           yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
@@ -260,7 +273,7 @@ namespace Controllers
 
         UnityEngine.Debug.Log(" --- Costo para " + neighbor.GetPosition() + ": gCost: " + neighbor.g + " hCost: " + neighbor.h + " fCost: " + neighbor.f);
 
-        if (Settings.VISUAL_PATHFINDING)
+        if (Settings.VISUAL_PATHFINDING.value)
         {
           neighbor.SetPlate(true);
           if (!neighbor.GetClosed()) neighbor.SetPlateColor(Colors.YELLOW);

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Global
 {
@@ -22,7 +23,12 @@ namespace Global
   /// </summary>
   public static class Settings
   {
-    public static bool VISUAL_PATHFINDING = false;
-    public static bool STEPS = false;
+    public static SettingReference VISUAL_PATHFINDING = new();
+    public static SettingReference STEPS = new();
+  }
+
+    public class SettingReference
+  {
+    public bool value = false;
   }
 }

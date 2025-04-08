@@ -26,7 +26,7 @@ namespace Components
       plate = Object.Instantiate(Resources.Load<GameObject>("Plane"));
       plate.transform.position = new Vector3(x, 0.5f, z);
       plate.SetActive(false);
-      if (!Settings.VISUAL_PATHFINDING)
+      if (!Settings.VISUAL_PATHFINDING.value)
       {
         plate.GetComponentInChildren<TMP_Text>().text = string.Empty;
       }
@@ -117,7 +117,7 @@ namespace Components
 
     public void SetText(bool force = false)
     {
-      if (!Settings.VISUAL_PATHFINDING && !force) return;
+      if (!Settings.VISUAL_PATHFINDING.value && !force) return;
       plate.GetComponentInChildren<TMP_Text>().text =
         "g: " + g + "\n" +
         "h: " + h + "\n" +
