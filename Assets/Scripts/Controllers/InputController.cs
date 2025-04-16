@@ -56,18 +56,6 @@ namespace Controllers
       origin = destination;
       destination = tile;
 
-      // Comprueba si el destino ya ha sido evaluado
-      Debug.Log("El camino ya ha sido evaludo??");
-      bool alreadyEvaluated = TilesController.IsTheDestinationAlreadyEvaluated((int)tile.transform.position.x, (int)tile.transform.position.z);
-
-      // Momento donde se decide si se va a evaluar el camino o no.
-      if (alreadyEvaluated)
-      {
-        TilesController.SetPath((int)tile.transform.position.x, (int)tile.transform.position.z);
-        Debug.Log("[InputController]: El destino ya ha sido evaluado.");
-        return 0;
-      }
-
       tile.GetComponent<Renderer>().material.color = Colors.GREEN;
       origin.GetComponent<Renderer>().material.color = Colors.BLUE;
 
@@ -107,18 +95,6 @@ namespace Controllers
 
         // Reinicia los tiles para evitar que se mantengan los caminos anteriores
         TilesController.ResetTiles();
-
-        // // Comprueba si el destino ya ha sido evaluado
-        // Debug.Log("El camino ya ha sido evaludo??");
-        // bool alreadyEvaluated = TilesController.IsTheDestinationAlreadyEvaluated((int)tile.transform.position.x, (int)tile.transform.position.z);
-
-        // // Momento donde se decide si se va a evaluar el camino o no.
-        // if (alreadyEvaluated)
-        // {
-        //   TilesController.SetPath((int)tile.transform.position.x, (int)tile.transform.position.z);
-        //   Debug.Log("[InputController]: El destino ya ha sido evaluado.");
-        //   return;
-        // }
 
         await ParallelController.Start();
       }

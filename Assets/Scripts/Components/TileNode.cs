@@ -8,16 +8,20 @@ namespace Components
 {
   public class TileNode
   {
+    // public
     public int x;
     public int z;
     public int g = 0;
     public int h = 0;
     public int f = 0;
     public bool blocked = false;
-    private bool closed = false;
-    public bool isAdded = false;
+    public bool isOpen = false;
     public TileNode parent = null;
-    private readonly GameObject plate;
+
+    // private
+    bool closed = false;
+    bool isPartOfThePath = false;
+    readonly GameObject plate;
 
     public TileNode(int x, int z)
     {
@@ -37,6 +41,13 @@ namespace Components
       Debug.Log("SetPath: " + x + ", " + z + " - Path Count: " + path.Count);
       try
       {
+        if (isPartOfThePath)
+        {
+          Debug.LogError("Error al intentar establecer el camino. Se ha evitado un posible Stack Overflow.");
+          return 1;
+        };
+
+        isPartOfThePath = true;
         // Activa la placa asociada al nodo
         plate.SetActive(true);
 
@@ -61,11 +72,12 @@ namespace Components
     public void Reset(bool softReset = false)
     {
       closed = false;
-      isAdded = false;
+      isOpen = false;
       parent = null;
       g = 0;
       h = 0;
       f = 0;
+      isPartOfThePath = false;
       if (!softReset) plate.SetActive(false);
       CleanText();
     }
@@ -84,25 +96,6 @@ namespace Components
       SetText();
     }
 
-    public Vector2 GetPosition()
-    {
-      return new Vector2(x, z);
-    }
-
-    public void SetClosed(bool closed)
-    {
-      this.closed = closed;
-    }
-
-    public bool GetClosed()
-    {
-      return closed;
-    }
-
-    public void SetPlate(bool state)
-    {
-      plate.SetActive(state);
-    }
 
     public override string ToString()
     {
@@ -129,5 +122,10 @@ namespace Components
     {
       plate.GetComponentInChildren<TMP_Text>().text = string.Empty;
     }
+
+    public void SetClosed(bool closed) { this.closed = closed; }
+    public bool GetClosed() { return closed; }
+    public void SetPlate(bool state) { plate.SetActive(state); }
+    public Vector2 GetPosition() { return new Vector2(x, z); }
   }
 }

@@ -359,13 +359,13 @@ namespace Controllers
       UnityEngine.Debug.Log("Añadiendo tile a la lista de tiles abiertos: " + tile.x + " " + tile.z + " closed: " + tile.GetClosed());
 
       // Si el tile ya fue agregado, se evita volver a agregarlo.
-      if (tile.isAdded) return;
+      if (tile.isOpen) return;
 
       // Se añade el tile a la lista
       openTiles.Enqueue(tile, new int[] { tile.f, tile.g });
 
       // Se establece el tile como agregado para evitar volver a agregarlo.
-      tile.isAdded = true;
+      tile.isOpen = true;
     }
 
     /// <summary>

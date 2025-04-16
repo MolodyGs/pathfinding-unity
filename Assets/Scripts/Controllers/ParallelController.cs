@@ -13,14 +13,6 @@ namespace Controllers
     static readonly GameObject pathfindingController = GameObject.Find("PathfindingController");
 
     /// <summary>
-    /// Inicializa el reconocimiento de tiles en la escena
-    /// </summary>
-    public static void Initialize()
-    {
-      TilesController.AddTileFromScene();
-    }
-
-    /// <summary>
     /// Comienza el pathfinding teniendo como referencia al origen y destino establecido en InputController
     /// </summary>
     public static async Task<int> Start()

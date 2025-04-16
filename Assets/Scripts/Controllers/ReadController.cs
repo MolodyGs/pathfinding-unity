@@ -48,14 +48,14 @@ namespace Controllers
           switch (c)
           {
             case '█':
-              tile = GameObject.Instantiate(tilePrefab, new Vector3(x, 0, z), Quaternion.identity);
+              tile = Object.Instantiate(tilePrefab, new Vector3(x, 0, z), Quaternion.identity);
               tile.GetComponent<Components.Tile>().blocked = false;
               TilesController.AddTile(x, z, false);
               tile.transform.SetParent(GameObject.Find("TilesForLists").transform);
 
               break;
             case 'x':
-              tile = GameObject.Instantiate(tilePrefab, new Vector3(x, 0, z), Quaternion.identity);
+              tile = Object.Instantiate(tilePrefab, new Vector3(x, 0, z), Quaternion.identity);
               tile.GetComponent<Components.Tile>().blocked = true;
               tile.GetComponent<Renderer>().material.color = Color.red;
               tile.transform.SetParent(GameObject.Find("TilesForLists").transform);

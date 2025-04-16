@@ -18,7 +18,6 @@ public class PriorityQueue<T>
   {
     if (heap.Count == 0) return default;
     T item = heap[0].item;
-    Debug.Log("El mejor item es: " + item);
     heap[0] = heap[^1];  // Mueve el último al inicio
     heap.RemoveAt(heap.Count - 1);
     HeapifyDown(0);
