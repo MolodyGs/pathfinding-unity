@@ -19,6 +19,7 @@ namespace Controllers
     private TileNode lastTileReference = null;
     private Vector3 destinationPosition;
     public GameObject LoadingText;
+    private static bool isRunning = false;
 
     /// <summary>
     /// Antesala del método StartPath, que inicia el proceso de Pathfinding para encontrar el camino más corto entre dos puntos.
@@ -27,6 +28,7 @@ namespace Controllers
     {
       // Se establece el estado inicial del controlador.
       InitialState();
+      isRunning = true;
 
       this.destinationPosition = destinationPosition;
 
@@ -35,14 +37,9 @@ namespace Controllers
       await Task.Delay(10);
       int response = await StartPath(originPosition);
       LoadingText.SetActive(response != 0);
+      
+      isRunning = false;
       return response;
-    }
-
-    void InitialState()
-    {
-      openTiles = new();
-      lastTileReference = null;
-      destinationPosition = Vector3.zero;
     }
 
     /// <summary>
@@ -71,7 +68,7 @@ namespace Controllers
 
       // Comienza un cronómetro para medir el tiempo de evaluación.
       Stopwatch stopwatch = new();
-      stopwatch.Start(); 
+      stopwatch.Start();
 
       // Determina si debe realizar pausas entre cada iteración Según el valor de VISUAL_PATHFINDING.
       if (Settings.VISUAL_PATHFINDING.value)
@@ -383,5 +380,15 @@ namespace Controllers
       yield return StartCoroutine(coroutine);
       tcs.SetResult(true);
     }
+
+    void InitialState()
+    {
+      openTiles = new();
+      lastTileReference = null;
+      destinationPosition = Vector3.zero;
+      isRunning = false;
+    }
+
+    public static bool IsRunning() { return isRunning; }
   }
 }

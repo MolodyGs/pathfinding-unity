@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using Global;
+using System.IO;
 
 namespace Controllers
 {
@@ -15,6 +16,8 @@ namespace Controllers
     /// </summary>
     public static async Task<int> SetInput(GameObject tile)
     {
+
+      if (PathfindingController.IsRunning()) return 1; // Si el pathfinding está en ejecución, no se puede seleccionar otro tile.
 
       // Si el tile está bloqueado, no se puede seleccionar.
       if (tile.GetComponent<Components.Tile>().blocked) return 2;
