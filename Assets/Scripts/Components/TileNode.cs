@@ -36,7 +36,7 @@ namespace Components
       }
     }
 
-    public async Task<int> SetPath(List<TileNode> path)
+    public int SetPath(List<TileNode> path)
     {
       Debug.Log("SetPath: " + x + ", " + z + " - Path Count: " + path.Count);
       try
@@ -60,7 +60,7 @@ namespace Components
         if (parent == null) return 0;
 
         // Si el padre no es nulo, entonces llama a su método SetPath de forma recursiva
-        return await parent.SetPath(path);
+        return parent.SetPath(path);
       }
       catch (System.Exception e)
       {

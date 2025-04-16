@@ -5,7 +5,6 @@ using Components;
 using System.Collections;
 using System.Diagnostics;
 using Global;
-using TMPro;
 
 namespace Controllers
 {
@@ -15,10 +14,10 @@ namespace Controllers
   /// </summary>
   public class PathfindingController : MonoBehaviour
   {
+    AlertController alertController;
     PriorityQueue<TileNode> openTiles = new();
     private TileNode lastTileReference = null;
     private Vector3 destinationPosition;
-    public GameObject LoadingText;
     private static bool isRunning = false;
 
     /// <summary>
@@ -28,25 +27,26 @@ namespace Controllers
     {
       // Se establece el estado inicial del controlador.
       InitialState();
-      isRunning = true;
 
+      isRunning = true;
       this.destinationPosition = destinationPosition;
 
-      LoadingText.GetComponent<TextMeshProUGUI>().text = "Loading...";
-      LoadingText.SetActive(true);
-      await Task.Delay(10);
-      int response = await StartPath(originPosition);
-      LoadingText.SetActive(response != 0);
-      
+      await RunCoroutineAsTask(StartPath(originPosition));
+
+      alertController.Hide();
       isRunning = false;
-      return response;
+
+      return 0;
     }
 
     /// <summary>
     /// Inicia el proceso de Pathfinding para encontrar el camino más corto entre dos puntos.
     /// </summary>
-    public async Task<int> StartPath(Vector3 originPosition)
+    IEnumerator StartPath(Vector3 originPosition)
     {
+
+      alertController.ShowLoadingMessage();
+      yield return null;
 
       // Obtiene el tile de origen.
       TileNode origin = TilesController.Find((int)originPosition.x, (int)originPosition.z);
@@ -55,7 +55,8 @@ namespace Controllers
       if (origin == null || destination == null)
       {
         UnityEngine.Debug.Log("No se encontró el tile de origen o destino.");
-        return 1;
+        // onDone?.Invoke(0);
+        yield break;
       }
 
       origin.SetClosed(true);
@@ -73,7 +74,7 @@ namespace Controllers
       // Determina si debe realizar pausas entre cada iteración Según el valor de VISUAL_PATHFINDING.
       if (Settings.VISUAL_PATHFINDING.value)
       {
-        await RunCoroutineAsTask(VisualEvaluateTile(origin));
+        yield return StartCoroutine(VisualEvaluateTile(origin));
       }
       else
       {
@@ -87,17 +88,14 @@ namespace Controllers
       if (lastTileReference == null)
       {
         UnityEngine.Debug.Log("No se encontró un camino entre el origen y el destino.");
-        LoadingText.GetComponent<TextMeshProUGUI>().text = "Path not found!";
-        return 1;
+        alertController.ShowNoPathMessage();
+        yield break;
       }
 
       // Si el último tile evaluado corresponde al destino, entonces se obtiene el camino más corto.
       UnityEngine.Debug.Log("Estableciendo el camino encontrado: " + lastTileReference.x + " " + lastTileReference.z);
-      await lastTileReference.SetPath(new());
-
-      // stopwatch.Stop();
-      // UnityEngine.Debug.Log("[Time] Tiempo de evaluación: " + stopwatch.ElapsedMilliseconds + "ms");
-      return 0;
+      lastTileReference.SetPath(new());
+      yield break;
     }
 
     /// <summary>
@@ -134,6 +132,7 @@ namespace Controllers
           yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         }
       }
+      alertController.Hide();
     }
 
     /// <summary>
@@ -387,6 +386,7 @@ namespace Controllers
       lastTileReference = null;
       destinationPosition = Vector3.zero;
       isRunning = false;
+      alertController = GameObject.Find("Controllers").GetComponent<AlertController>();
     }
 
     public static bool IsRunning() { return isRunning; }
