@@ -6,6 +6,6 @@ class BtnSteps : BaseButton
   public override void InitialState()
   {
     setting = Settings.STEPS;
-    SetPanelAndChildrenState(setting.value);
+    SetChildrenBottonsState(setting.value);
   }
 }

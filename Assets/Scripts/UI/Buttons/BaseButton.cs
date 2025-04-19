@@ -23,16 +23,17 @@ namespace UI
       setting.value = !setting.value;
 
       // Se establece el estado del panel y de los hijos del botón.
-      SetPanelAndChildrenState(setting.value);
+      SetChildrenBottonsState(setting.value);
 
       // Se establece el color del botón
       SetButtonColor();
     }
 
     /// <summary>
-    /// Establece el estado del panel y de los hijos del botón.
+    /// Establece el estado del panel y de los hijos del botón. 
+    /// Un botón puede activar la posibilidad de activar otros botones, por lo que si el botón padre se desactiva, entonces los hijos también se desactivan.
     /// </summary>
-    protected void SetPanelAndChildrenState(bool state)
+    protected void SetChildrenBottonsState(bool state)
     {
       // Se desactivan los elementos hijos opcionales del botón
       foreach (GameObject child in optionalChildren) { child.SetActive(state); }
