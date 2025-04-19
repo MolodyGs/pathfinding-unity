@@ -9,12 +9,13 @@ namespace Components
   public class Tile : MonoBehaviour
   {
     public bool blocked = false;
+    public TileNode tile;
     public Tile() { }
 
     /// <summary>
     /// Asigna el tile seleccionado por el usuario como origen o destino.
     /// </summary>
-    public async void OnMouseDown() { await Controllers.InputController.SetInput(gameObject); }
+    public async void OnMouseDown() { await Controllers.InputController.SetInput(tile); }
     // public void OnMouseEnter() { Controllers.InputController.SetInputWhenMouseEnter(gameObject); }
 
     public void Reset()

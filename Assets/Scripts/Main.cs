@@ -1,32 +1,26 @@
+using System.Collections;
 using System.Threading.Tasks;
+using Controllers;
 using UnityEngine;
 
 public class Main : MonoBehaviour
 {
-  public void Start()
+  public async void Start()
   {
-    StartCoroutine(Controllers.Reader.ReadTxtFile("tiles.txt"));
-    // Controllers.ParallelController.Initialize();
-    // Comienza el proceso inicial de la escena, inicializando el controlador de pathfinding y el controlador de tiles.
-    // Controllers.InputController.origin = Controllers.TilesController.tilesObj[18, 0];
-    // GameObject destination;
+    await RunCoroutineAsTask(Reader.ReadTxtFile("tiles.txt"));
+    TurnController.Inizialize(false);
+  }
 
-    // while (true)
-    // {
-    //   int x = Random.Range(18, 33);
-    //   int z = Random.Range(0, 15);
+  Task RunCoroutineAsTask(IEnumerator coroutine)
+  {
+    var tcs = new TaskCompletionSource<bool>();
+    StartCoroutine(WaitForCompletion(coroutine, tcs));
+    return tcs.Task;
+  }
 
-    //   if (x != Controllers.InputController.origin.transform.position.x && z != Controllers.InputController.origin.transform.position.z)
-    //   {
-    //     destination = Controllers.TilesController.tilesObj[x, z];
-    //     if (destination == null) continue;
-    //     int response = await Controllers.InputController.SetInput(destination);
-    //     if (response == -1) 
-    //     {
-    //       Debug.Log("Tile bloqueado, selecciona otro.");
-    //     }
-    //   }
-    //   await Task.Delay(1000);
-    // }
+  IEnumerator WaitForCompletion(IEnumerator coroutine, TaskCompletionSource<bool> tcs)
+  {
+    yield return StartCoroutine(coroutine);
+    tcs.SetResult(true);
   }
 }

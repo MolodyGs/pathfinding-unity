@@ -5,6 +5,8 @@ using Components;
 using System.Collections;
 using System.Diagnostics;
 using Global;
+using System.Collections.Generic;
+using UnityEngine.Pool;
 
 namespace Controllers
 {
@@ -15,26 +17,30 @@ namespace Controllers
   public class PathfindingController : MonoBehaviour
   {
     AlertController alertController;
-    PriorityQueue<TileNode> openTiles = new();
-    private TileNode lastTileReference = null;
-    private Vector3 destinationPosition;
-    private static bool isRunning = false;
+    PriorityQueue<TileNode> openTiles;
+    private TileNode lastTileReference;
+    private TileNode destinationReference;
+    private bool isRunning;
+    private List<TileNode> path;
 
     /// <summary>
     /// Antesala del método StartPath, que inicia el proceso de Pathfinding para encontrar el camino más corto entre dos puntos.
     /// </summary>
-    public async Task<int> Path(Vector3 originPosition, Vector3 destinationPosition)
+    public async Task<int> Path(TileNode origin, TileNode destination)
     {
-      // Se establece el estado inicial del controlador.
+      
       InitialState();
 
+      // Establece el destino como una variable global.
+      this.destinationReference = destination;
+
+      // Comienza el proceso de pathfinding
       isRunning = true;
-      this.destinationPosition = destinationPosition;
 
-      await RunCoroutineAsTask(StartPath(originPosition));
+      await RunCoroutineAsTask(StartPath(origin, destination));
 
+      // Oculta cualquier alterta que se esté mostrando.
       alertController.Hide();
-      isRunning = false;
 
       return 0;
     }
@@ -42,26 +48,24 @@ namespace Controllers
     /// <summary>
     /// Inicia el proceso de Pathfinding para encontrar el camino más corto entre dos puntos.
     /// </summary>
-    IEnumerator StartPath(Vector3 originPosition)
+    IEnumerator StartPath(TileNode origin, TileNode destination)
     {
 
       alertController.ShowLoadingMessage();
       yield return null;
 
-      // Obtiene el tile de origen.
-      TileNode origin = TilesController.Find((int)originPosition.x, (int)originPosition.z);
-      TileNode destination = TilesController.Find((int)destinationPosition.x, (int)destinationPosition.z);
+      UnityEngine.Debug.Log("Desde Pathfinding");
+      UnityEngine.Debug.Log("origin Tile: " + origin);
+      UnityEngine.Debug.Log("destination Tile: " + destination);
 
       if (origin == null || destination == null)
       {
         UnityEngine.Debug.Log("No se encontró el tile de origen o destino.");
-        // onDone?.Invoke(0);
         yield break;
       }
 
+      // El tile de origen es el tile que se va a evaluar primero, por lo que se establece como cerrado.
       origin.SetClosed(true);
-
-      // Se establecen los tiles abiertos como vacíos.
 
       // Calcula el costo de H para el tile de origen.
       int hCost = CalcHCost(origin);
@@ -74,13 +78,16 @@ namespace Controllers
       // Determina si debe realizar pausas entre cada iteración Según el valor de VISUAL_PATHFINDING.
       if (Settings.VISUAL_PATHFINDING.value)
       {
+        // Comienza el proceso de evaluación de tiles por intervalos de tiempo.
         yield return StartCoroutine(VisualEvaluateTile(origin));
       }
       else
       {
+        // Comienza el proceso de evaluación sin intervalos de tiempo.
         DefaultEvaluateTile(origin);
       }
 
+      // Detiene el cronómetro y muestra el tiempo de evaluación.
       stopwatch.Stop();
       UnityEngine.Debug.Log("[Time] Tiempo de evaluación: " + stopwatch.ElapsedMilliseconds + "ms");
 
@@ -94,7 +101,11 @@ namespace Controllers
 
       // Si el último tile evaluado corresponde al destino, entonces se obtiene el camino más corto.
       UnityEngine.Debug.Log("Estableciendo el camino encontrado: " + lastTileReference.x + " " + lastTileReference.z);
-      lastTileReference.SetPath(new());
+      lastTileReference.SetPath(path);
+
+      lastTileReference.blocked = true;
+      origin.blocked = false;
+
       yield break;
     }
 
@@ -103,23 +114,23 @@ namespace Controllers
     /// </summary>
     IEnumerator VisualEvaluateTile(TileNode tile)
     {
-      TileNode bestTile;
       while (true)
       {
         tile.SetPlateColor(Colors.BLUE);
-        bestTile = EvaluateTile(tile);
+        TileNode bestTile = EvaluateTile(tile);
 
         // Si el mejor tile es nulo, entonces no se encontró un camino entre el origen y el destino.
         if (bestTile == null) break;
 
         // Si el mejor tile es el destino, entonces hemos encontrado el camino más corto.
-        if (bestTile.x == destinationPosition.x && bestTile.z == destinationPosition.z)
+        if (bestTile.x == destinationReference.x && bestTile.z == destinationReference.z)
         {
           UnityEngine.Debug.Log("Llegamos al destino");
           lastTileReference = bestTile;
           break;
         }
 
+        // Se establece el mejor tile
         tile = bestTile;
 
         // Evita que al presionar la barra espaciadora se evaluen más de un nodo. Espera 0.05 segundos entre cada iteración.
@@ -132,6 +143,8 @@ namespace Controllers
           yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         }
       }
+
+      // Al finalizar la búsqueda, se oculta el mensaje de carga.
       alertController.Hide();
     }
 
@@ -149,13 +162,14 @@ namespace Controllers
         if (bestTile == null) break;
 
         // Si el mejor tile es el destino, entonces hemos encontrado el camino más corto.
-        if (bestTile.x == destinationPosition.x && bestTile.z == destinationPosition.z)
+        if (bestTile.x == destinationReference.x && bestTile.z == destinationReference.z)
         {
           UnityEngine.Debug.Log("Llegamos al destino");
           lastTileReference = bestTile;
           break;
         }
 
+        // Se establece el mejor tile
         tile = bestTile;
       }
     }
@@ -192,9 +206,11 @@ namespace Controllers
     /// </summary>
     void EvaluateNeighborsCost(TileNode[] neighbors, TileNode tile)
     {
+
       // Itera entre los vecinos y evalua el costo de G y H de cada vecino.
       for (int i = 0; i < neighbors.Length; i++)
       {
+        // Almacena el vecino actual.
         TileNode neighbor = neighbors[i];
 
         // Si el vecino es nulo o está bloqueado, entonces se omite.
@@ -209,48 +225,7 @@ namespace Controllers
         // Si el tile corresponde a un movimiento diagonal, entonces se evalua si tiene tiles adyacentes bloqueados o inexistentes.
         if (gCost == 14)
         {
-          TileNode left = null;
-          TileNode right = null;
-
-          // Si el tile es un movimiento diagonal, entonces se evalua si tiene tiles adyacentes bloqueados o inexistentes.
-          try
-          {
-            // Caso especial donde el nodo a evaluar es justamente el primero de la lista (izquieda inferior).
-            if (i == 0)
-            {
-              left = neighbors[^1];
-              right = neighbors[i + 1];
-
-            }
-            else if (i > 1)
-            {
-              left = neighbors[i - 1];
-              right = neighbors[i + 1];
-            }
-
-            bool leftBlocked = false;
-            bool rightBlocked = false;
-
-            // Si el tile izquierdo o derecho no es nulo, entonces se evalua si está bloqueado. Caso contrario, se establece como bloqueado por ser nulo (es un hueco).
-            if (left != null) leftBlocked = left.blocked;
-            else leftBlocked = true;
-
-            if (right != null) rightBlocked = right.blocked;
-            else rightBlocked = true;
-
-            // Si ambos tiles adyacentes están bloqueados, entonces se omite el tile vecino.
-            if (rightBlocked && leftBlocked)
-            {
-              UnityEngine.Debug.Log("Omitiendo tile ya que tiene tiles bloqueados adyacentes " + neighbor.GetPosition() + " " + tile.GetPosition());
-              continue;
-            }
-          }
-          catch
-          {
-            // Cuando los tiles siguiente o anterior son nulos, entonces uno de ellos 2 son un hueco en el mapa.
-            UnityEngine.Debug.Log("No se pudo obtener los vecinos adyacentes: " + neighbor.GetPosition() + " " + tile.GetPosition());
-            continue;
-          }
+          if (HaveAdjacentTiles(tile, neighbors, i)) { continue; }
         }
 
         // Suma el costo de G del tile activo al costo de G del tile vecino para obtener el costo G total
@@ -279,6 +254,61 @@ namespace Controllers
         {
           AddOpenTile(neighbor);
         }
+      }
+    }
+
+    /// <summary>
+    /// Comprueba que tile no tenga tiles adyacentes que bloqueen el movimiento.
+    /// Por como está ordenado la lista de vecinos, los tiles i + 1 e i - 1 son los tiles derecho e izquierdo respectivamente.
+    /// </summary>
+    bool HaveAdjacentTiles(TileNode tile, TileNode[] neighbors, int i)
+    {
+      TileNode left = null;
+      TileNode right = null;
+
+      // Si el tile es un movimiento diagonal, entonces se evalua si tiene tiles adyacentes bloqueados o inexistentes.
+      try
+      {
+        // Caso especial donde el nodo a evaluar es justamente el primero de la lista (izquieda inferior).
+        if (i == 0)
+        {
+          left = neighbors[^1];
+          right = neighbors[i + 1];
+
+        }
+        else if (i > 1)
+        {
+          left = neighbors[i - 1];
+          right = neighbors[i + 1];
+        }
+
+        bool leftBlocked = false;
+        bool rightBlocked = false;
+
+        // Si el tile izquierdo o derecho no es nulo, entonces se evalua si está bloqueado. Caso contrario, se establece como bloqueado por ser nulo (es un hueco).
+        if (left != null) leftBlocked = left.blocked;
+        else leftBlocked = true;
+
+        if (right != null) rightBlocked = right.blocked;
+        else rightBlocked = true;
+
+        // Si ambos tiles adyacentes están bloqueados, entonces se omite el tile vecino.
+        if (rightBlocked && leftBlocked)
+        {
+          UnityEngine.Debug.Log("Omitiendo tile ya que tiene tiles bloqueados adyacentes " + neighbors[i].GetPosition() + " " + tile.GetPosition());
+          return true;
+        }
+        else
+        {
+          // Si alguno de los tiles adyacentes no está bloqueado, entonces el movimiento no está bloqueado.
+          return false;
+        }
+      }
+      catch
+      {
+        // Cuando los tiles siguiente o anterior son nulos, entonces uno de ellos 2 son un hueco en el mapa.
+        UnityEngine.Debug.Log("No se pudo obtener los vecinos adyacentes: " + neighbors[i].GetPosition() + " " + tile.GetPosition());
+        return true;
       }
     }
 
@@ -340,10 +370,10 @@ namespace Controllers
     /// </summary>
     int CalcHCost(TileNode tile)
     {
-      UnityEngine.Debug.Log(destinationPosition);
+      UnityEngine.Debug.Log(destinationReference);
       UnityEngine.Debug.Log(tile);
-      float x = Math.Abs(tile.x - destinationPosition.x);
-      float z = Math.Abs(tile.z - destinationPosition.z);
+      float x = Math.Abs(tile.x - destinationReference.x);
+      float z = Math.Abs(tile.z - destinationReference.z);
 
       // Retona el costo de H para el tile teniendo en cuenta diagonalidad.
       return 10 * (int)Math.Abs(x - z) + 14 * (int)(x > z ? z : x);
@@ -380,15 +410,24 @@ namespace Controllers
       tcs.SetResult(true);
     }
 
+    /// <summary>
+    /// Inicializa el estado del controlador de pathfinding, estableciendo los valores iniciales de las variables.
+    /// </summary>
     void InitialState()
     {
       openTiles = new();
       lastTileReference = null;
-      destinationPosition = Vector3.zero;
+      destinationReference = new TileNode(0, 0, null);
       isRunning = false;
       alertController = GameObject.Find("Controllers").GetComponent<AlertController>();
+      path = new List<TileNode>();
+      TilesController.ResetTiles();
     }
 
-    public static bool IsRunning() { return isRunning; }
+    /// <summary>
+    /// Verifica si el controlador de pathfinding está en ejecución. Evita que se pueda volver a ejecutar el pathfinding mientras se está ejecutando.
+    /// </summary>
+    public bool IsRunning() { return isRunning; }
+    public List<TileNode> GetPath() { return path; }
   }
 }

@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using TMPro;
 using Global;
@@ -17,19 +16,22 @@ namespace Components
     public bool blocked = false;
     public bool isOpen = false;
     public TileNode parent = null;
+    public GameObject obj;
 
     // private
     bool closed = false;
     bool isPartOfThePath = false;
     readonly GameObject plate;
 
-    public TileNode(int x, int z)
+    public TileNode(int x, int z, GameObject obj)
     {
       this.x = x;
       this.z = z;
       plate = Object.Instantiate(Resources.Load<GameObject>("Plane"));
       plate.transform.position = new Vector3(x, 0.5f, z);
       plate.SetActive(false);
+      this.obj = obj;
+
       if (!Settings.VISUAL_PATHFINDING.value)
       {
         plate.GetComponentInChildren<TMP_Text>().text = string.Empty;
@@ -121,6 +123,35 @@ namespace Components
     public void CleanText()
     {
       plate.GetComponentInChildren<TMP_Text>().text = string.Empty;
+    }
+
+    public Vector3 Position()
+    { 
+      return new Vector3(x, 0.5f, z);
+    }
+
+    public void ResetRendererColor()
+    { 
+      if (obj != null)
+      {
+        obj.GetComponent<Renderer>().material.color = Colors.WHITE;
+      }
+    }
+
+    public void SetRenderarColorAsGreen()
+    {
+      if (obj != null)
+      {
+        obj.GetComponent<Renderer>().material.color = Colors.GREEN;
+      }
+    }
+
+    public void SetRenderarColorAsBlue()
+    {
+      if (obj != null)
+      {
+        obj.GetComponent<Renderer>().material.color = Colors.BLUE;
+      }
     }
 
     public void SetClosed(bool closed) { this.closed = closed; }
