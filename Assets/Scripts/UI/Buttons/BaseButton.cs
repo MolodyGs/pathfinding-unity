@@ -9,11 +9,18 @@ namespace UI
     public GameObject[] optionalChildren = null; // Parametro opcional
     public GameObject optionalPanel = null; // Parametro opcional
     public SettingReference setting = new();
+    Button button = null; // Referencia al componente Button del objeto actual
 
     /// <summary>
     /// Initializa el estado del botón y su panel hijo. Es posible realizar modificaciones especificas en cada botón.
     /// </summary>
     public abstract void InitialState();
+
+    public void Start()
+    {
+      button = gameObject.GetComponent<Button>();
+      button.onClick.AddListener(_OnClick); // Se añade el evento de clic al botón
+    }
 
     /// <summary>
     /// Acción general al hacer clic en el botón.
