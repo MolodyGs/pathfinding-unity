@@ -82,6 +82,7 @@ namespace Controllers
         z--;
         x = 18;
       }
+      TilesController.SetNeighbours();
     }
   }
 }

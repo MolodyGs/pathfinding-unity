@@ -6,7 +6,6 @@ using System.Collections;
 using System.Diagnostics;
 using Global;
 using System.Collections.Generic;
-using UnityEngine.Pool;
 
 namespace Controllers
 {
@@ -180,14 +179,8 @@ namespace Controllers
       UnityEngine.Debug.Log("Cerrando TILE: " + tile.x + " " + tile.z + " closed: " + tile.GetClosed());
       UnityEngine.Debug.Log(" - Evaluando Tile: " + tile.x + " " + tile.z);
 
-      // Lista de vecinos
-      TileNode[] neighbors = new TileNode[8];
-
-      // Establece los vecinos
-      neighbors = SetNeighbors(neighbors, tile);
-
       // Itera entre los vecinos y evalua el costo de G y H de cada vecino.
-      EvaluateNeighborsCost(neighbors, tile);
+      EvaluateNeighborsCost(tile.neighbors, tile);
 
       // Busca el mejor tile para continuar el camino.
       TileNode bestTile = openTiles.Dequeue();
@@ -310,59 +303,6 @@ namespace Controllers
         UnityEngine.Debug.Log("No se pudo obtener los vecinos adyacentes: " + neighbors[i].GetPosition() + " " + tile.GetPosition());
         return true;
       }
-    }
-
-    /// <summary>
-    /// Encuentra los vecinos de un tile y los establece en un arreglo.
-    /// </summary>
-    TileNode[] SetNeighbors(TileNode[] neighbors, TileNode tile)
-    {
-      // Obtiene la posición de referencia
-      int x = tile.x;
-      int z = tile.z;
-
-      // Busca los 8 posibles vecinos de un tile. Comienza desde la esquina inferior izquierda y sigue el sentido de las manecillas del reloj.
-      neighbors[0] = FindNeighbor(x - 1, z - 1);
-      neighbors[1] = FindNeighbor(x - 1, z);
-      neighbors[2] = FindNeighbor(x - 1, z + 1);
-      neighbors[3] = FindNeighbor(x, z + 1);
-      neighbors[4] = FindNeighbor(x + 1, z + 1);
-      neighbors[5] = FindNeighbor(x + 1, z);
-      neighbors[6] = FindNeighbor(x + 1, z - 1);
-      neighbors[7] = FindNeighbor(x, z - 1);
-      UnityEngine.Debug.Log(" -- Neighbors Establecidos para: " + tile.x + " " + tile.z);
-
-      // Retorna la lista de vecinos
-      return neighbors;
-    }
-
-    /// <summary>
-    /// Encuentra el vecino de un tile
-    /// </summary>
-    TileNode FindNeighbor(int x, int z)
-    {
-      UnityEngine.Debug.Log(" -- Buscando vecino: " + x + " " + z);
-      try
-      {
-        // Obtiene el tile vecino de la lista indexada de tiles
-        TileNode node = TilesController.Find(x, z);
-
-        if (node == null)
-        {
-          UnityEngine.Debug.Log(" -- Vecino no encontrado: " + x + " " + z);
-          return null;
-        }
-
-        // Si el tile vecino no es un tile cerrado, entonces se agrega a la lista de tiles a evaluar.
-
-        UnityEngine.Debug.Log(" -- Vecino encontrado! " + x + " " + z);
-        return node;
-      }
-      catch (Exception e)
-      {
-        UnityEngine.Debug.LogError("Error al buscar vecino: " + e.Message);
-      }
-      return null;
     }
 
     /// <summary>

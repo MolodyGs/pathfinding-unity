@@ -16,6 +16,7 @@ namespace Components
     public bool blocked = false;
     public bool isOpen = false;
     public TileNode parent = null;
+    public TileNode[] neighbors = new TileNode[8];
     public GameObject obj;
 
     // private

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Components;
 using UnityEngine;
 using Global;
+using System;
 
 namespace Controllers
 {
@@ -113,6 +114,57 @@ namespace Controllers
     public static void SetPlayerTile(TileNode tile)
     {
       player = tile;
+    }
+
+    /// <summary>
+    /// Establece los tiles vecinos de cada tile en la lista de tiles.
+    /// </summary>
+    public static void SetNeighbours()
+    {
+      TileNode tile;
+      for (int i = 0; i < tiles.GetLength(0); i++)
+      {
+        for (int j = 0; j < tiles.GetLength(1); j++)
+        {
+          tile = tiles[i, j];
+          if (tile == null) continue;
+
+          int x = tile.x;
+          int z = tile.z;
+
+          tile.neighbors[0] = FindNeighbor(x - 1, z - 1);
+          tile.neighbors[1] = FindNeighbor(x - 1, z);
+          tile.neighbors[2] = FindNeighbor(x - 1, z + 1);
+          tile.neighbors[3] = FindNeighbor(x, z + 1);
+          tile.neighbors[4] = FindNeighbor(x + 1, z + 1);
+          tile.neighbors[5] = FindNeighbor(x + 1, z);
+          tile.neighbors[6] = FindNeighbor(x + 1, z - 1);
+          tile.neighbors[7] = FindNeighbor(x, z - 1);
+        }
+      }
+    }
+
+    /// <summary
+    /// Encuentra un tile vecino en base a su posición (x, z).
+    /// Si no fue posible encontrar el tile, entonces retorna null.
+    /// </summary>
+    static TileNode FindNeighbor(int x, int z)
+    {
+      Debug.Log(" -- Buscando vecino: " + x + " " + z);
+
+      // Obtiene el tile vecino de la lista indexada de tiles
+      TileNode node = Find(x, z);
+
+      // Si el tile no existe, entonces se retorna null
+      if (node == null)
+      {
+        Debug.Log(" -- Vecino no encontrado: " + x + " " + z);
+        return null;
+      }
+
+      // Se retorna el tile encontrado
+      Debug.Log(" -- Vecino encontrado! " + x + " " + z);
+      return node;
     }
   }
 }
