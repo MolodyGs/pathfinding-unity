@@ -41,6 +41,8 @@ namespace Controllers
       // Oculta cualquier alterta que se esté mostrando.
       alertController.Hide();
 
+      isRunning = false;
+
       return 0;
     }
 
@@ -101,9 +103,6 @@ namespace Controllers
       // Si el último tile evaluado corresponde al destino, entonces se obtiene el camino más corto.
       UnityEngine.Debug.Log("Estableciendo el camino encontrado: " + lastTileReference.x + " " + lastTileReference.z);
       lastTileReference.SetPath(path);
-
-      lastTileReference.blocked = true;
-      origin.blocked = false;
 
       yield break;
     }
@@ -207,7 +206,7 @@ namespace Controllers
         TileNode neighbor = neighbors[i];
 
         // Si el vecino es nulo o está bloqueado, entonces se omite.
-        if (neighbor == null || neighbor.blocked) { continue; }
+        if (neighbor == null || neighbor.GetBlockedState()) { continue; }
 
         // Obtiene la distancia entre los tiles. Generalmente estos tiles están a 1 o raiz de 2 de distancia, esto ya que son tiles adyacentes los evaluados.
         float distance = Vector2.Distance(neighbor.GetPosition(), tile.GetPosition());
@@ -279,10 +278,10 @@ namespace Controllers
         bool rightBlocked = false;
 
         // Si el tile izquierdo o derecho no es nulo, entonces se evalua si está bloqueado. Caso contrario, se establece como bloqueado por ser nulo (es un hueco).
-        if (left != null) leftBlocked = left.blocked;
+        if (left != null) leftBlocked = left.GetBlockedState();
         else leftBlocked = true;
 
-        if (right != null) rightBlocked = right.blocked;
+        if (right != null) rightBlocked = right.GetBlockedState();
         else rightBlocked = true;
 
         // Si ambos tiles adyacentes están bloqueados, entonces se omite el tile vecino.
@@ -357,7 +356,7 @@ namespace Controllers
     {
       openTiles = new();
       lastTileReference = null;
-      destinationReference = new TileNode(0, 0, null);
+      destinationReference = new TileNode(0, 0, false, null);
       isRunning = false;
       alertController = GameObject.Find("Controllers").GetComponent<AlertController>();
       path = new List<TileNode>();

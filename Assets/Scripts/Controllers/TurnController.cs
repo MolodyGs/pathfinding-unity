@@ -25,8 +25,8 @@ namespace Controllers
 
       entities = new LinkedList();
       entities.Add(player);
-      // entities.Add(entity1);
-      // entities.Add(entity2);
+      entities.Add(entity1);
+      entities.Add(entity2);
       ParallelController.entity = entities.first.value;
 
       // El siguiente turno es el de la primera entidad
@@ -42,7 +42,8 @@ namespace Controllers
     public static async Task<int> LoadTurn()
     {
       List<TileNode> tiles = TilesController.FreeTiles();
-      TileNode destination = tiles[Random.Range(0, tiles.Count - 1)];
+      // TileNode destination = tiles[Random.Range(0, tiles.Count - 1)];
+      TileNode destination = TilesController.GetPlayerTile();
       TileNode origin = TilesController.Find((int)currentEntity.value.transform.position.x, (int)currentEntity.value.transform.position.z);
 
       Debug.Log("Es el turno de: " + currentEntity.value.name);
@@ -58,7 +59,6 @@ namespace Controllers
       }
 
       await movementController.Movement(currentEntity.value, ParallelController.pathfindingController.GetPath());
-      TilesController.SetBlockedState(destination.x, destination.z, true);
 
       currentEntity = currentEntity.next;
       if (currentEntity.value.name != "Player")
@@ -67,6 +67,7 @@ namespace Controllers
       }
       else
       {
+        isPlayerTurn = true;
         ParallelController.entity = currentEntity.value;
         ParallelController.isRunning = false;
         return response;
@@ -75,19 +76,20 @@ namespace Controllers
 
     public static async Task FinishPlayerTurn(int response)
     {
+      ParallelController.isRunning = true;
       if (response == 0)
       {
         await movementController.Movement(currentEntity.value, ParallelController.pathfindingController.GetPath());
+        isPlayerTurn = false;
         Debug.Log("Finalizando el turno del jugador");
-        TilesController.SetBlockedState((int)currentEntity.value.transform.position.x, (int)currentEntity.value.transform.position.z, true);
       }
       else
       { 
         Debug.Log("Hubo un codigo de error distinto de 0: " + response);
+        ParallelController.isRunning = false;
         return;
       }
 
-      ParallelController.isRunning = true;
       currentEntity = currentEntity.next;
       ParallelController.entity = currentEntity.value;
       Debug.Log("Es el turno de: " + currentEntity.value.name);
@@ -99,6 +101,7 @@ namespace Controllers
       }
       else
       {
+        isPlayerTurn = true;
         ParallelController.isRunning = false;
       }
     }

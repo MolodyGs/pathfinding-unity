@@ -13,24 +13,25 @@ namespace Components
     public int g = 0;
     public int h = 0;
     public int f = 0;
-    public bool blocked = false;
     public bool isOpen = false;
     public TileNode parent = null;
     public TileNode[] neighbors = new TileNode[8];
     public GameObject obj;
 
     // private
+    bool blocked = false;
     bool closed = false;
     bool isPartOfThePath = false;
     readonly GameObject plate;
 
-    public TileNode(int x, int z, GameObject obj)
+    public TileNode(int x, int z, bool blocked, GameObject obj)
     {
       this.x = x;
       this.z = z;
       plate = Object.Instantiate(Resources.Load<GameObject>("Plane"));
       plate.transform.position = new Vector3(x, 0.5f, z);
       plate.SetActive(false);
+      this.blocked = blocked;
       this.obj = obj;
 
       if (!Settings.VISUAL_PATHFINDING.value)
@@ -51,13 +52,18 @@ namespace Components
         };
 
         isPartOfThePath = true;
-        // Activa la placa asociada al nodo
-        plate.SetActive(true);
 
         // Añade el nodo a la lista de nodos para el camino
         path.Add(this);
 
-        SetPlateColor(Colors.GREEN);
+        Debug.Log("[Settings] " + Settings.COLORS.value + " - " + Settings.VISUAL_PATHFINDING.value);
+
+        if (Settings.COLORS.value || Settings.VISUAL_PATHFINDING.value)
+        {
+          // Activa la placa asociada al nodo
+          plate.SetActive(true);
+          SetPlateColor(Colors.GREEN);
+        }
 
         // Verifica que el padre exista
         if (parent == null) return 0;
@@ -127,12 +133,12 @@ namespace Components
     }
 
     public Vector3 Position()
-    { 
+    {
       return new Vector3(x, 0.5f, z);
     }
 
     public void ResetRendererColor()
-    { 
+    {
       if (obj != null)
       {
         obj.GetComponent<Renderer>().material.color = Colors.WHITE;
@@ -153,6 +159,16 @@ namespace Components
       {
         obj.GetComponent<Renderer>().material.color = Colors.BLUE;
       }
+    }
+
+    public void SetBlockedState(bool blocked)
+    {
+      this.blocked = blocked;
+    }
+
+    public bool GetBlockedState()
+    {
+      return blocked;
     }
 
     public void SetClosed(bool closed) { this.closed = closed; }

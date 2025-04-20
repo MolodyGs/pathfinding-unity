@@ -25,6 +25,7 @@ namespace Global
   {
     public static SettingReference VISUAL_PATHFINDING = new();
     public static SettingReference STEPS = new();
+    public static SettingReference COLORS = new();
   }
 
     public class SettingReference

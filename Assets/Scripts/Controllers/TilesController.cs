@@ -24,8 +24,8 @@ namespace Controllers
       {
         Transform tile = gameObjectTilesParent.transform.GetChild(i).transform;
         tilesObj[(int)tile.position.x, (int)tile.position.z] = tile.gameObject;
-        AddTile((int)tile.position.x, (int)tile.position.z, tile.GetComponent<Components.Tile>().blocked, tile.gameObject);
-        if (tile.GetComponent<Components.Tile>().blocked)
+        AddTile((int)tile.position.x, (int)tile.position.z, tile.GetComponent<Tile>().blocked, tile.gameObject);
+        if (tile.GetComponent<Tile>().blocked)
         {
           tile.GetComponent<Renderer>().material.color = Colors.RED;
         }
@@ -36,7 +36,7 @@ namespace Controllers
       {
         if (tile != null)
         {
-          Debug.Log("Tile: " + tile.x + " " + tile.z + " blocked: " + tile.blocked);
+          Debug.Log("Tile: " + tile.x + " " + tile.z + " blocked: " + tile.GetBlockedState());
         }
       }
     }
@@ -59,7 +59,7 @@ namespace Controllers
     /// </summary>
     public static void AddTile(int x, int z, bool blocked, GameObject obj, bool isPlayer = false)
     {
-      tiles[x, z] = new TileNode(x, z, obj) { blocked = blocked };
+      tiles[x, z] = new TileNode(x, z, blocked, obj);
       if (isPlayer)
       {
         player = tiles[x, z];
@@ -74,7 +74,7 @@ namespace Controllers
       TileNode tile = Find(x, z);
       if (tile == null) return;
       Debug.Log("tile bloqueado");
-      tile.blocked = blocked;
+      tile.SetBlockedState(blocked);
     }
 
     /// <summary>
@@ -98,7 +98,7 @@ namespace Controllers
       List<TileNode> freeTiles = new();
       foreach (TileNode tile in tiles)
       {
-        if (tile != null && !tile.blocked)
+        if (tile != null && !tile.GetBlockedState())
         {
           freeTiles.Add(tile);
         }
@@ -114,6 +114,7 @@ namespace Controllers
     public static void SetPlayerTile(TileNode tile)
     {
       player = tile;
+      InputController.origin = player;
     }
 
     /// <summary>
