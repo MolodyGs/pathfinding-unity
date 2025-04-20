@@ -8,18 +8,25 @@ namespace Controllers
 {
   public class MovementController : MonoBehaviour
   {
-    public async Task Movement(GameObject entity, List<TileNode> tiles)
+    public async Task Movement(GameObject origin, List<TileNode> tiles)
     {
       Debug.Log("Comenzando el movimiento.");
-      await RunCoroutineAsTask(Move(entity, tiles));
+      await RunCoroutineAsTask(Move(origin, tiles));
       Debug.Log("Movimiento terminado");
     }
 
-    IEnumerator Move(GameObject entity, List<TileNode> tiles)
+    IEnumerator Move(GameObject origin, List<TileNode> tiles)
     {
+      if (!TurnController.isPlayerTurn)
+      {
+        tiles[1].SetBlockedState(true);
+        tiles[^1].SetBlockedState(false);
+      }
+
       for (int i = tiles.Count - 1; i >= 0; i--)
       {
-        entity.transform.position = new Vector3(tiles[i].GetPosition().x, 0.5f, tiles[i].GetPosition().y);
+        if (i == 0 && !TurnController.isPlayerTurn) yield break;
+        origin.transform.position = new Vector3(tiles[i].GetPosition().x, 0.5f, tiles[i].GetPosition().y);
         yield return new WaitForSeconds(0.2f);
       }
     }
