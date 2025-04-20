@@ -49,7 +49,6 @@ namespace Controllers
           {
             case '█':
               tile = Object.Instantiate(tilePrefab, new Vector3(x, 0, z), Quaternion.identity);
-              tile.GetComponent<Components.Tile>().blocked = false;
               TilesController.AddTile(x, z, false, tile);
               tile.GetComponent<Components.Tile>().tile = TilesController.Find(x, z);
               tile.transform.SetParent(GameObject.Find("TilesForLists").transform);
@@ -57,15 +56,13 @@ namespace Controllers
               break;
             case 'x':
               tile = Object.Instantiate(tilePrefab, new Vector3(x, 0, z), Quaternion.identity);
-              tile.GetComponent<Components.Tile>().blocked = true;
               tile.GetComponent<Renderer>().material.color = Color.red;
               tile.transform.SetParent(GameObject.Find("TilesForLists").transform);
               TilesController.AddTile(x, z, true, tile);
               tile.GetComponent<Components.Tile>().tile = TilesController.Find(x, z);
               break;
-            case 'P':
+            case 'p':
               tile = Object.Instantiate(tilePrefab, new Vector3(x, 0, z), Quaternion.identity);
-              tile.GetComponent<Components.Tile>().blocked = false;
               tile.transform.SetParent(GameObject.Find("TilesForLists").transform);
               TilesController.AddTile(x, z, false, tile, true);
               tile.GetComponent<Components.Tile>().tile = TilesController.Find(x, z);
