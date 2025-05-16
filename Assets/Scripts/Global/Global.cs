@@ -23,13 +23,17 @@ namespace Global
   /// </summary>
   public static class Settings
   {
-    public static SettingReference VISUAL_PATHFINDING = new();
-    public static SettingReference STEPS = new();
+    public static SettingReference VISUAL_PATHFINDING = new(true);
     public static SettingReference COLORS = new();
+    public static SettingReference STEPS = new();
   }
 
-    public class SettingReference
+  public class SettingReference
   {
-    public bool value = false;
+    public bool value;
+    public SettingReference(bool value = false)
+    {
+      this.value = value;
+    }
   }
 }
